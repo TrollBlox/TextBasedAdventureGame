@@ -39,6 +39,10 @@ public class Player {
         setEquip(index);
     }
 
+    public void removeEquip() {
+        setEquip(-1);
+    }
+
     public void addItem(Item newItem) {
         playerInventory.add(newItem);
     }
@@ -53,6 +57,7 @@ public class Player {
     }
 
     public int getDamage() {
+        if (getEquip() == -1) return -1;
         return getItem(getEquip()).getDamage();
     }
 

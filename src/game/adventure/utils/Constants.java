@@ -22,11 +22,11 @@ public final class Constants {
 
     public static final Item sword = new Item("Sword", "You don't know where it came from, but it will be useful anyway.", true, 5);
     public static final Item pen = new Item("Pen", "You can hear something rattling around in it, but you can't get it open.", true, -1);
-    public static final Item lockbox = new Item("Lockbox", "You can tell that whatever is inside is very important, but it is sadly locked.", true, -1);
-    public static final Item scalpel = new Item("Scalpel", "It was found on the embalming table. It will definitely be useful.", true, -1);
+    public static final Item lockBox = new Item("Lock box", "You can tell that whatever is inside is very important, but it is sadly locked.", true, -1);
+    public static final Item scalpel = new Item("Scalpel", "It was found on the embalming table. It will definitely be useful.", true, 3);
     public static final Item key = new Item("Key", "You don't know how this got in the pen, but you have it now.", true, -1);
     public static final Item broom = new Item("Broom", "You found it in the closet. That's everything about it.", true, -1);
-    public static final Item doorlock = new Item("Door lock", "A lock on the east door in the morgue.", false, -1);
+    public static final Item doorLock = new Item("Door lock", "A lock on the east door in the morgue.", false, -1);
 
     public static final Item brokenPen = new Item("Broken pen", "A pen you cut open with the scalpel. It is very sharp.", true, 10);
 
@@ -55,30 +55,19 @@ public final class Constants {
 
 
 
-    public static Runnable useFail = new Runnable() {
-        @Override
-        public void run() {
-            System.out.println("You can't use those items together. Maybe try putting them in the opposite order.");
-        }
+    public static Runnable useFail = () -> System.out.println("You can't use those items together. Maybe try putting them in the opposite order.");
+
+    public static Runnable scalpelOnPen = () -> {
+        Constants.player.addItem(Constants.key);
+        Constants.player.addItem(Constants.brokenPen);
+        Constants.player.removeItem(Constants.pen);
+        System.out.println("You found a Key inside of the Pen!");
     };
 
-    public static Runnable scalpelOnPen = new Runnable() {
-        @Override
-        public void run() {
-            Constants.player.addItem(Constants.key);
-            Constants.player.addItem(Constants.brokenPen);
-            Constants.player.removeItem(Constants.pen);
-            System.out.println("You found a Key inside of the Pen!");
-        }
-    };
-
-    public static Runnable keyOnClosetDoor = new Runnable() {
-        @Override
-        public void run() {
-            System.out.println("You unlocked the closet door!");
-            Constants.morgue.removeItem("Door_lock");
-            Constants.morgue.setE(4);
-        }
+    public static Runnable keyOnClosetDoor = () -> {
+        System.out.println("You unlocked the closet door!");
+        Constants.morgue.removeItem("Door lock");
+        Constants.morgue.setE(4);
     };
 
 }

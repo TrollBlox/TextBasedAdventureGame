@@ -29,7 +29,7 @@ public class HelperFunctions {
 
     public static void lookSouth() {
         if (GameLogic.currentRoom.getS() == -1) return;
-        if (Utils.getMap(GameLogic.currentRoom.getN()).getHasVisited()) {
+        if (Utils.getMap(GameLogic.currentRoom.getS()).getHasVisited()) {
             System.out.println("To the south: " + Utils.getMap(GameLogic.currentRoom.getS()).getName());
             return;
         }

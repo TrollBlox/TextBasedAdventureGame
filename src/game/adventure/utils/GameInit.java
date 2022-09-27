@@ -5,9 +5,9 @@ public class GameInit {
     public GameInit() {
         Constants.forestItems.add(Constants.sword);
         Constants.entryItems.add(Constants.pen);
-        Constants.hallItems.add(Constants.lockbox);
+        Constants.hallItems.add(Constants.lockBox);
         Constants.morgueItems.add(Constants.scalpel);
-        Constants.morgueItems.add(Constants.doorlock);
+        Constants.morgueItems.add(Constants.doorLock);
         Constants.closetItems.add(Constants.broom);
         Constants.forestItems.add(Constants.tutorial1);
         Constants.entryItems.add(Constants.tutorial2);

@@ -166,6 +166,11 @@ public class GameLogic {
     }
 
     public void equipCommand(List<String> wordList) {
+        if (wordList.size() == 1) {
+            Constants.player.removeEquip();
+            System.out.println("Removed your equip");
+            return;
+        }
         String o = Utils.firstLetterUpper(HelperFunctions.parseItemName(wordList));
 
         if (!Constants.player.hasItem(o)) {
@@ -257,14 +262,13 @@ public class GameLogic {
                 continue;
             }
 
-            String nameSuffix = Constants.player.getDamage() == -1 ? ": " : " (" + Constants.player.getDamage() + " damage): ";
+            String nameSuffix = Constants.player.getItem(i).getDamage() == -1 ? ": " : " (" + Constants.player.getItem(i).getDamage() + " damage): ";
 
             System.out.println(Constants.player.getItem(i).getName() + nameSuffix + Constants.player.getItem(i).getDescription());
         }
     }
 
     public void inventoryCommand() {
-        System.out.println("Stats:");
         System.out.println("Health: " + Constants.player.getHealth());
         int damage = Constants.player.getEquip() == -1 ? 1 : Constants.player.getDamage();
         System.out.println("Damage: " + damage);

@@ -1,5 +1,7 @@
 package game.adventure.utils;
 
+import game.adventure.main.HelperFunctions;
+
 public class GameInit {
 
     public GameInit() {
@@ -16,11 +18,11 @@ public class GameInit {
 
         Constants.morgueEnemies.add(Constants.zombie);
 
-        Utils.setMap(Constants.forest, 0);
-        Utils.setMap(Constants.entry, 1);
-        Utils.setMap(Constants.hall, 2);
-        Utils.setMap(Constants.morgue, 3);
-        Utils.setMap(Constants.closet, 4);
+        HelperFunctions.setMap(Constants.forest, 0);
+        HelperFunctions.setMap(Constants.entry, 1);
+        HelperFunctions.setMap(Constants.hall, 2);
+        HelperFunctions.setMap(Constants.morgue, 3);
+        HelperFunctions.setMap(Constants.closet, 4);
     }
 
 }

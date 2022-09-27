@@ -13,13 +13,13 @@ public class GameLogic {
 
     public static final GameInit gi = new GameInit();
 
-    public static Room currentRoom = Utils.getMap(0);
+    public static Room currentRoom = HelperFunctions.getMap(0);
 
     public void takeInput() {
         String input;
         System.out.println("Press h for help!");
 
-        String n = Utils.startsWithVowel(currentRoom.getName()) ? "n " : " ";
+        String n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
 
         System.out.println("You find yourself in a" + n + currentRoom.getName());
         do {
@@ -171,7 +171,7 @@ public class GameLogic {
             System.out.println("Removed your equip");
             return;
         }
-        String o = Utils.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+        String o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
 
         if (!Constants.player.hasItem(o)) {
             System.out.println("You don't have the item " + o + "!");
@@ -183,7 +183,7 @@ public class GameLogic {
     }
 
     public void inspectItem(List<String> wordList) {
-        String o = Utils.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+        String o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
 
         for (Item i : currentRoom.getItems()) {
             if (i.getName().equals(o)) {
@@ -312,9 +312,9 @@ public class GameLogic {
                 i--;
             }
 
-            o = Utils.firstLetterUpper(builder.toString().trim());
+            o = HelperFunctions.firstLetterUpper(builder.toString().trim());
 
-            oo = Utils.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+            oo = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
 
             if (!((Constants.player.hasItem(o) || currentRoom.hasItem(o)) && ((Constants.player.hasItem(oo) || currentRoom.hasItem(oo))))) {
                 System.out.println("You don't have that item!");
@@ -330,7 +330,7 @@ public class GameLogic {
     public void takeCommand(List<String> wordList) {
         String o;
 
-        o = Utils.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+        o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
 
         if (!currentRoom.hasItem(o)) {
             System.out.println("Can't find that item!");
@@ -351,7 +351,7 @@ public class GameLogic {
     public void dropCommand(List<String> wordList) {
         String o;
 
-        o = Utils.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+        o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
 
         if (!Constants.player.hasItem(o)) {
             System.out.println("You don't have that item!");
@@ -380,8 +380,8 @@ public class GameLogic {
                         return;
                     }
                     roomChanged = true;
-                    currentRoom = Utils.getMap(currentRoom.getN());
-                    n = Utils.startsWithVowel(currentRoom.getName()) ? "n " : " ";
+                    currentRoom = HelperFunctions.getMap(currentRoom.getN());
+                    n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
                     System.out.println("You find yourself in a" + n + currentRoom.getName());
                 }
                 case "s", "south" -> {
@@ -390,8 +390,8 @@ public class GameLogic {
                         return;
                     }
                     roomChanged = true;
-                    currentRoom = Utils.getMap(currentRoom.getS());
-                    n = Utils.startsWithVowel(currentRoom.getName()) ? "n " : " ";
+                    currentRoom = HelperFunctions.getMap(currentRoom.getS());
+                    n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
                     System.out.println("You find yourself in a" + n + currentRoom.getName());
                 }
                 case "e", "east" -> {
@@ -400,8 +400,8 @@ public class GameLogic {
                         return;
                     }
                     roomChanged = true;
-                    currentRoom = Utils.getMap(currentRoom.getE());
-                    n = Utils.startsWithVowel(currentRoom.getName()) ? "n " : " ";
+                    currentRoom = HelperFunctions.getMap(currentRoom.getE());
+                    n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
                     System.out.println("You find yourself in a" + n + currentRoom.getName());
                 }
                 case "w", "west" -> {
@@ -410,8 +410,8 @@ public class GameLogic {
                         return;
                     }
                     roomChanged = true;
-                    currentRoom = Utils.getMap(currentRoom.getW());
-                    n = Utils.startsWithVowel(currentRoom.getName()) ? "n " : " ";
+                    currentRoom = HelperFunctions.getMap(currentRoom.getW());
+                    n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
                     System.out.println("You find yourself in a" + n + currentRoom.getName());
                 }
             }

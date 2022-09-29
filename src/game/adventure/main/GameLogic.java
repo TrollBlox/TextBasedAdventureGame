@@ -328,6 +328,11 @@ public class GameLogic {
     }
 
     public void takeCommand(List<String> wordList) {
+        if (wordList.size() <= 1) {
+            System.out.println("What item would you like to take?");
+            return;
+        }
+
         String o;
 
         o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));

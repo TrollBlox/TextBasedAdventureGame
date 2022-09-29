@@ -328,6 +328,7 @@ public class GameLogic {
     }
 
     public void takeCommand(List<String> wordList) {
+        if (wordList.size() <= 1) return;
         String o;
 
         o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));

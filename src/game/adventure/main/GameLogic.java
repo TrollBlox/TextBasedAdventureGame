@@ -171,7 +171,8 @@ public class GameLogic {
             System.out.println("Removed your equip");
             return;
         }
-        String o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+
+        String o = HelperFunctions.parseItemName(wordList);
 
         if (!Constants.player.hasItem(o)) {
             System.out.println("You don't have the item " + o + "!");
@@ -183,22 +184,22 @@ public class GameLogic {
     }
 
     public void inspectItem(List<String> wordList) {
-        String o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+        String o = HelperFunctions.parseItemName(wordList);
 
         for (Item i : currentRoom.getItems()) {
-            if (i.getName().equals(o)) {
+            if (i.getName().equalsIgnoreCase(o)) {
                 System.out.println(i.getName() + ": " + i.getDescription());
                 return;
             }
         }
         for (Item i : Constants.player.getInventory()) {
-            if (i.getName().equals(o)) {
+            if (i.getName().equalsIgnoreCase(o)) {
                 System.out.println(i.getName() + ": " + i.getDescription());
                 return;
             }
         }
         for (Enemy e : currentRoom.getEnemies()) {
-            if (e.getName().equals(o)) {
+            if (e.getName().equalsIgnoreCase(o)) {
                 System.out.println(e.getName() + " (" + e.getHealth() + " hp " + e.getDamage() + " damage): " + e.getDescription());
                 return;
             }
@@ -318,9 +319,9 @@ public class GameLogic {
                 i--;
             }
 
-            o = HelperFunctions.firstLetterUpper(builder.toString().trim());
+            o = builder.toString().trim();
 
-            oo = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+            oo = HelperFunctions.parseItemName(wordList);
 
             if (!((Constants.player.hasItem(o) || currentRoom.hasItem(o)) && ((Constants.player.hasItem(oo) || currentRoom.hasItem(oo))))) {
                 System.out.println("You don't have that item!");
@@ -341,7 +342,7 @@ public class GameLogic {
 
         String o;
 
-        o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+        o = HelperFunctions.parseItemName(wordList);
 
         if (!currentRoom.hasItem(o)) {
             System.out.println("Can't find that item!");
@@ -355,14 +356,19 @@ public class GameLogic {
 
         Constants.player.addItem(currentRoom.getItem(o));
         currentRoom.removeItem(o);
-        System.out.println("You took the " + o + ".");
+        System.out.println("You took the " + Constants.player.getItem(o).getName() + ".");
 
     }
 
     public void dropCommand(List<String> wordList) {
+        if (wordList.size() <= 1) {
+            System.out.println("What item would you like to drop?");
+            return;
+        }
+
         String o;
 
-        o = HelperFunctions.firstLetterUpper(HelperFunctions.parseItemName(wordList));
+        o = HelperFunctions.parseItemName(wordList);
 
         if (!Constants.player.hasItem(o)) {
             System.out.println("You don't have that item!");
@@ -374,7 +380,7 @@ public class GameLogic {
 
         currentRoom.addItem(Constants.player.getItem(o));
         Constants.player.removeItem(o);
-        System.out.println("You dropped the " + o + ".");
+        System.out.println("You dropped the " + currentRoom.getItem(o).getName() + ".");
 
     }
 

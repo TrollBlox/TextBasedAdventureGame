@@ -49,7 +49,7 @@ public class Player {
 
     private int getInt(String item) {
         for (int i = 0; i < playerInventory.size(); i++) {
-            if (playerInventory.get(i).getName().equals(item)) {
+            if (playerInventory.get(i).getName().equalsIgnoreCase(item)) {
                 return i;
             }
         }

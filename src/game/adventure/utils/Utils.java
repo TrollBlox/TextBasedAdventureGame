@@ -7,11 +7,11 @@ public final class Utils {
     private Utils() { }
 
     public static Runnable useFetcher(String itemOneName, String itemTwoName) {
-        if (itemOneName.equals("Scalpel") && itemTwoName.equals("Pen")) {
+        if (itemOneName.equalsIgnoreCase("Scalpel") && itemTwoName.equalsIgnoreCase("Pen")) {
             return Constants.scalpelOnPen;
-        } else if (itemOneName.equals("Key") && itemTwoName.equals("Door lock")) {
+        } else if (itemOneName.equalsIgnoreCase("Key") && itemTwoName.equalsIgnoreCase("Door lock")) {
             return Constants.keyOnClosetDoor;
-        } else if (itemOneName.equals("Small key") && itemTwoName.equals("Lock box")) {
+        } else if (itemOneName.equalsIgnoreCase("Small key") && itemTwoName.equalsIgnoreCase("Lock box")) {
             return Constants.smallKeyOnLockBox;
         }
         return Constants.useFail;

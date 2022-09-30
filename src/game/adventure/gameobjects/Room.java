@@ -104,7 +104,7 @@ public class Room {
 
     private int getInt(String name) {
         for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getName().equals(name)) {
+            if (items.get(i).getName().equalsIgnoreCase(name)) {
                 return i;
             }
         }

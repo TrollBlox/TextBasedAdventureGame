@@ -11,6 +11,7 @@ public class GameInit {
         Constants.morgueItems.add(Constants.scalpel);
         Constants.morgueItems.add(Constants.doorLock);
         Constants.closetItems.add(Constants.broom);
+        Constants.closetItems.add(Constants.smallKey);
         Constants.forestItems.add(Constants.tutorial1);
         Constants.entryItems.add(Constants.tutorial2);
 

@@ -208,9 +208,15 @@ public class GameLogic {
 
     public void helpCommand() {
         System.out.println("""
-                Type "q" to quit, "l" to look around or at an item, "i" to view your inventory, "t" to take items,
-                "d" to drop items, "a" to attack, "eq" to equip items, and "u" to use items on each other!
-                Type "n", "s", "e", and "w" to move!""");
+                Quit - "q"
+                Look - "l" or "l <item>"
+                Inventory - "i"
+                Take - "t <item>"
+                Drop - "d <item>"
+                Attack - "a"
+                Equip - "eq <item>"
+                Use - "u <item1> on <item2>"
+                Movement - "n", "s", "e", and "w\"""");
     }
 
     public void lookItemsCommand() {

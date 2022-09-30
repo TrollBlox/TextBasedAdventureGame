@@ -11,6 +11,8 @@ public final class Utils {
             return Constants.scalpelOnPen;
         } else if (itemOneName.equals("Key") && itemTwoName.equals("Door lock")) {
             return Constants.keyOnClosetDoor;
+        } else if (itemOneName.equals("Small key") && itemTwoName.equals("Lock box")) {
+            return Constants.smallKeyOnLockBox;
         }
         return Constants.useFail;
     }

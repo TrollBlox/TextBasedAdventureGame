@@ -23,16 +23,16 @@ public final class Constants {
 
     public static final Item sword = new Item("Sword", "You don't know where it came from, but it will be useful anyway.", true, 5);
     public static final Item pen = new Item("Pen", "You can hear something rattling around in it, but you can't get it open.", true, -1);
-    public static final Item lockBox = new Item("Lock box", "It has a ridiculously small key hole.", true, -1);
+    public static final Item lockBox = new Item("Lock Box", "It has a ridiculously small key hole.", true, -1);
     public static final Item scalpel = new Item("Scalpel", "It was found on the embalming table. It will definitely be useful.", true, 3);
     public static final Item key = new Item("Key", "You don't know how this got in the pen, but you have it now.", true, -1);
     public static final Item broom = new Item("Broom", "You found it in the closet. That's everything about it.", true, -1);
-    public static final Item doorLock = new Item("Door lock", "A lock on the east door in the morgue.", false, -1);
-    public static final Item brokenPen = new Item("Broken pen", "A pen you cut open with the scalpel. It is very sharp.", true, 10);
-    public static final Item rottenFlesh = new Item("Rotten flesh", "It might just be the worst thing you have ever smelled.", true, -1);
+    public static final Item doorLock = new Item("Door Lock", "A lock on the east door in the morgue.", false, -1);
+    public static final Item brokenPen = new Item("Broken Pen", "A pen you cut open with the scalpel. It is very sharp.", true, 10);
+    public static final Item rottenFlesh = new Item("Rotten Flesh", "It might just be the worst thing you have ever smelled.", true, -1);
     public static final Item smallKey = new Item("Small key", "A ridiculously small key that would only fit in a ridiculously small key hole.", true, -1);
     public static final Item tutorial3 = new Item("Page 3", "A paper you found in the Lock box. It says: \"That's the end of the tutorial. Feel free to add your own content by editing the utils folder in the project!\"", true, -1);
-    public static final Item unlockBox = new Item("Unlock box", "An unlocked lock box. You just opened it.", true, -1);
+    public static final Item unlockBox = new Item("Unlocked Lock Box", "An unlocked lock box. You just opened it.", true, -1);
 
     public static final List<Item> forestItems = new ArrayList<>();
     public static final List<Item> entryItems = new ArrayList<>();
@@ -45,6 +45,7 @@ public final class Constants {
     public static final List<Enemy> hallEnemies = new ArrayList<>();
     public static final List<Enemy> morgueEnemies = new ArrayList<>();
     public static final List<Enemy> closetEnemies = new ArrayList<>();
+
     public static final List<Item> zombieDrops = new ArrayList<>();
 
     public static final Enemy zombie = new Enemy("Zombie", "A zombie in the Morgue!", 5, 1, zombieDrops);

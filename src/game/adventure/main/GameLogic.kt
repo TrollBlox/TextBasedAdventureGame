@@ -142,7 +142,15 @@ class GameLogic {
     }
 
     private fun helpCommand() {
-        println(/* !!! Hit visitElement for element type: class org.jetbrains.kotlin.nj2k.tree.JKErrorExpression !!! */)
+        println("""Quit - "q"
+Look - "l" or "l <item>"
+Inventory - "i"
+Take - "t <item>"
+Drop - "d <item>"
+Attack - "a"
+Equip - "eq <item>"
+Use - "u <item1> on <item2>"
+Movement - "n", "s", "e", and "w"""")
     }
 
     private fun lookItemsCommand() {

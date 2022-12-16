@@ -179,6 +179,11 @@ public class GameLogic {
             return;
         }
 
+        if (Constants.player.getItem(o).getDamage() == -1) {
+            System.out.println("You can't equip " + o + "!");
+            return;
+        }
+
         Constants.player.setEquip(o);
         System.out.println("Equipped " + o);
     }

@@ -1,6 +1,6 @@
 package game.adventure.gameobjects;
 
-public class Item {
+public class git Item {
     private String name;
     private String description;
     private boolean canPickUp;

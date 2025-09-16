@@ -1,5 +1,6 @@
 package game.adventure.main;
 
+import game.adventure.gameobjects.Item;
 import game.adventure.gameobjects.Room;
 import game.adventure.utils.Constants;
 import game.adventure.utils.Utils;
@@ -21,7 +22,7 @@ public class HelperFunctions {
     }
 
     public static void lookNorth() {
-        if (GameLogic.currentRoom.getN() == -1) return;
+        if (GameLogic.currentRoom.getN().isEmpty()) return;
         if (getMap(GameLogic.currentRoom.getN()).getHasVisited()) {
             System.out.println("To the north: " + getMap(GameLogic.currentRoom.getN()).getName());
             return;
@@ -30,7 +31,7 @@ public class HelperFunctions {
     }
 
     public static void lookSouth() {
-        if (GameLogic.currentRoom.getS() == -1) return;
+        if (GameLogic.currentRoom.getS().isEmpty()) return;
         if (getMap(GameLogic.currentRoom.getS()).getHasVisited()) {
             System.out.println("To the south: " + getMap(GameLogic.currentRoom.getS()).getName());
             return;
@@ -39,7 +40,7 @@ public class HelperFunctions {
     }
 
     public static void lookEast() {
-        if (GameLogic.currentRoom.getE() == -1) return;
+        if (GameLogic.currentRoom.getE().isEmpty()) return;
         if (getMap(GameLogic.currentRoom.getE()).getHasVisited()) {
             System.out.println("To the east: " + getMap(GameLogic.currentRoom.getE()).getName());
             return;
@@ -48,7 +49,7 @@ public class HelperFunctions {
     }
 
     public static void lookWest() {
-        if (GameLogic.currentRoom.getW() == -1) return;
+        if (GameLogic.currentRoom.getW().isEmpty()) return;
         if (getMap(GameLogic.currentRoom.getW()).getHasVisited()) {
             System.out.println("To the west: " + getMap(GameLogic.currentRoom.getW()).getName());
             return;
@@ -67,12 +68,12 @@ public class HelperFunctions {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
-    public static Room getMap(int i) {
-        return Constants.map[i];
-    }
-
-    public static void setMap(Room newRoom, int i) {
-        Constants.map[i] = newRoom;
+    public static Room getMap(String name) {
+        for (int i = 0; i < Constants.map.size(); i++) {
+            Room room = Constants.map.get(i);
+            if (room.getName().equals(name)) return room;
+        }
+        throw new RuntimeException("Unknown Room!");
     }
 
     public static boolean startsWithVowel(String string) {
@@ -80,5 +81,10 @@ public class HelperFunctions {
             case 'a', 'e', 'i', 'o', 'u', 'y' -> true;
             default -> false;
         };
+    }
+
+    public static void removeItem(Item item) {
+        GameLogic.currentRoom.removeItem(item);
+        Constants.player.removeItem(item);
     }
 }

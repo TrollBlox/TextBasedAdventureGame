@@ -13,7 +13,7 @@ public class GameLogic {
 
     public static final GameInit gi = new GameInit();
 
-    public static Room currentRoom = HelperFunctions.getMap(0);
+    public static Room currentRoom;
 
     public void takeInput() {
         String input;
@@ -35,134 +35,66 @@ public class GameLogic {
         wordList = wordList(input);
 
         try {
-            wordList.get(0);
+            wordList.getFirst();
         } catch (IndexOutOfBoundsException e) {
             System.out.println("You must enter a command!");
             return;
         }
 
-        try {
-            switch (wordList.get(0)) {
-                case "n":
-                case "north":
-                case "s":
-                case "south":
-                case "e":
-                case "east":
-                case "w":
-                case "west":
-                    getDirection(wordList);
-                    break;
-                case "i":
-                case "inv":
-                case "inventory":
-                    inventoryCommand();
-                    break;
-                case "h":
-                case "help":
-                    helpCommand();
-                    break;
-                case "l":
-                case "look":
-                    lookCommand(wordList);
-                    break;
-                case "t":
-                case "take":
-                    takeCommand(wordList);
-                    break;
-                case "d":
-                case "drop":
-                    dropCommand(wordList);
-                    break;
-                case "u":
-                case "use":
-                    useCommand(wordList);
-                    break;
-                case "eq":
-                case "equip":
-                    equipCommand(wordList);
-                    break;
-                case "a":
-                case "attack":
-                    attackCommand();
-                    break;
-                case "q":
-                case "quit":
-                    break;
-                default:
-                    System.out.println("I don't understand " + wordList.get(0));
-                    break;
-            }
-        } finally {
-            if (wordList.size() != 0) {
-                switch (wordList.get(0)) {
-                    case "l":
-                    case "look":
-                    case "n":
-                    case "north":
-                    case "s":
-                    case "south":
-                    case "e":
-                    case "east":
-                    case "w":
-                    case "west":
-                        break;
-                    default:
-                        enemyAttack();
-                }
-            }
+        switch (wordList.getFirst()) {
+            case "n":
+            case "north":
+            case "s":
+            case "south":
+            case "e":
+            case "east":
+            case "w":
+            case "west":
+                getDirection(wordList);
+                break;
+            case "i":
+            case "inv":
+            case "inventory":
+                inventoryCommand();
+                break;
+            case "h":
+            case "help":
+                helpCommand();
+                break;
+            case "l":
+            case "look":
+                lookCommand(wordList);
+                break;
+            case "t":
+            case "take":
+                takeCommand(wordList);
+                break;
+            case "d":
+            case "drop":
+                dropCommand(wordList);
+                break;
+            case "u":
+            case "use":
+                useCommand(wordList);
+                break;
+            case "eq":
+            case "equip":
+                equipCommand(wordList);
+                break;
+            case "a":
+            case "q":
+            case "quit":
+                break;
+            default:
+                System.out.println("I don't understand " + wordList.getFirst());
+                break;
         }
     }
 
-    public void playerDeath(String killer) {
+    public static void playerDeath(String killer) {
         System.out.println("The " + killer + " killed you!");
         System.out.println("rip bozo");
         System.exit(0);
-    }
-
-    public void enemyAttack() {
-        for (Enemy e : currentRoom.getEnemies()) {
-            Constants.player.setHealth(Constants.player.getHealth() - e.getDamage());
-            if (Constants.player.getHealth() <= 0) {
-                playerDeath(e.getName());
-                return;
-            }
-            System.out.println("The " + e.getName() + " did " + e.getDamage() + " damage to you!");
-        }
-    }
-
-    public void attackCommand() {
-        List<Enemy> toRemove = new ArrayList<>();
-
-        if (currentRoom.getEnemies().size() == 0) {
-            System.out.println("There are no enemies in this room!");
-            return;
-        }
-
-        for (Enemy e : currentRoom.getEnemies()) {
-            int damage = Constants.player.getEquip() == -1 ? 1 : Constants.player.getDamage();
-
-            e.setHealth(e.getHealth() - damage);
-            System.out.println("You did " + damage + " damage to the " + e.getName());
-
-            if (e.getHealth() <= 0) {
-                System.out.println("You killed the " + e.getName());
-                toRemove.add(e);
-                System.out.print("It dropped: ");
-                for (int i = 0; i < e.getDrops().size(); i++) {
-                    Item drop = e.getDrops().get(i);
-                    currentRoom.addItem(drop);
-                    String separator = i == e.getDrops().size() - 1 ? "." : ", ";
-
-                    System.out.println(e.getDrops().get(i).getName() + separator);
-                }
-            }
-        }
-
-        try {
-            currentRoom.getEnemies().removeAll(toRemove);
-        } catch (NullPointerException ignore) {
-        }
     }
 
     public void equipCommand(List<String> wordList) {
@@ -391,13 +323,13 @@ public class GameLogic {
 
     public void getDirection(List<String> input) {
         boolean roomChanged = false;
-        String direction = input.get(0);
+        String direction = input.getFirst();
         String n;
 
         try {
             switch (direction) {
                 case "n", "north" -> {
-                    if (currentRoom.getN() == -1) {
+                    if (currentRoom.getN().isEmpty()) {
                         System.out.println("You can't go north here!");
                         return;
                     }
@@ -407,7 +339,7 @@ public class GameLogic {
                     System.out.println("You find yourself in a" + n + currentRoom.getName());
                 }
                 case "s", "south" -> {
-                    if (currentRoom.getS() == -1) {
+                    if (currentRoom.getS().isEmpty()) {
                         System.out.println("You can't go south here!");
                         return;
                     }
@@ -417,7 +349,7 @@ public class GameLogic {
                     System.out.println("You find yourself in a" + n + currentRoom.getName());
                 }
                 case "e", "east" -> {
-                    if (currentRoom.getE() == -1) {
+                    if (currentRoom.getE().isEmpty()) {
                         System.out.println("You can't go east here!");
                         return;
                     }
@@ -427,7 +359,7 @@ public class GameLogic {
                     System.out.println("You find yourself in a" + n + currentRoom.getName());
                 }
                 case "w", "west" -> {
-                    if (currentRoom.getW() == -1) {
+                    if (currentRoom.getW().isEmpty()) {
                         System.out.println("You can't go west here!");
                         return;
                     }
@@ -441,12 +373,8 @@ public class GameLogic {
             if (currentRoom.getEnemies().isEmpty() || !roomChanged) {
                 return;
             }
-            for (int i = 0; i < currentRoom.getEnemies().size(); i++) {
-                Enemy e = currentRoom.getEnemies().get(i);
-                System.out.print("Enemies near you: ");
-                String separator = i == currentRoom.getEnemies().size() - 1 ? "." : ", ";
-                System.out.println(e.getName() + " (" + e.getHealth() + " hp " + e.getDamage() + " damage)" + separator);
-            }
+            new Combat();
+
         }
     }
 }

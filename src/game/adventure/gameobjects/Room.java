@@ -1,16 +1,38 @@
 package game.adventure.gameobjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Room {
     private String name, description;
-    private int n, s, e, w;
-    private final List<Item> items;
+    private String n, s, e, w;
+    private List<Item> items;
+    private List<Enemy> enemies;
     private boolean hasVisited;
 
-    private List<Enemy> enemies;
+    public Room(String name, String description, String n, String s, String e, String w, List<Item> items, List<Enemy> enemies) {
+        init(name, description, n, s, e, w, items, enemies);
+    }
 
-    public Room(String name, String description, int n, int s, int e, int w, List<Item> items, List<Enemy> enemies) {
+    public Room(String name, String description, String n, String s, String e, String w) {
+        init(name, description, n, s, e, w, new ArrayList<>(), new ArrayList<>());
+    }
+
+    @SuppressWarnings("unchecked")
+    public Room(String name, String description, String n, String s, String e, String w, List<?> itemsOrEnemies, Class<?> type) {
+        List<Item> items = new ArrayList<>();
+        List<Enemy> enemies = new ArrayList<>();
+        if (type == Item.class) {
+            items = (List<Item>) itemsOrEnemies;
+        } else if (type == Enemy.class) {
+            enemies = (List<Enemy>) itemsOrEnemies;
+        } else {
+            throw new IllegalArgumentException("Unsupported class type!");
+        }
+        init(name, description, n, s, e, w, items, enemies);
+    }
+
+    private void init(String name, String description, String n, String s, String e, String w, List<Item> items, List<Enemy> enemies) {
         this.name = name;
         this.description = description;
         this.n = n;
@@ -38,35 +60,35 @@ public class Room {
         this.description = description;
     }
 
-    public int getN() {
+    public String getN() {
         return n;
     }
 
-    public void setN(int n) {
+    public void setN(String n) {
         this.n = n;
     }
 
-    public int getS() {
+    public String getS() {
         return s;
     }
 
-    public void setS(int s) {
+    public void setS(String s) {
         this.s = s;
     }
 
-    public int getE() {
+    public String getE() {
         return e;
     }
 
-    public void setE(int e) {
+    public void setE(String e) {
         this.e = e;
     }
 
-    public int getW() {
+    public String getW() {
         return w;
     }
 
-    public void setW(int w) {
+    public void setW(String w) {
         this.w = w;
     }
 

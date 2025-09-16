@@ -1,6 +1,8 @@
 package game.adventure.utils;
 
+import game.adventure.gameobjects.Item;
 import game.adventure.gameobjects.Room;
+import game.adventure.main.GameLogic;
 
 public final class Utils {
 

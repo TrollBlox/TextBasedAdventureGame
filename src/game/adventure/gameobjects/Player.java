@@ -33,9 +33,6 @@ public class Player {
 
     public void setEquip(String item) throws IndexOutOfBoundsException {
         int index = getInt(item);
-        if (index == -1) {
-            throw new IndexOutOfBoundsException();
-        }
         setEquip(index);
     }
 

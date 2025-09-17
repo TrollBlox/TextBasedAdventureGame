@@ -2,8 +2,7 @@ package game.adventure.main;
 
 import game.adventure.gameobjects.Enemy;
 import game.adventure.gameobjects.Item;
-import game.adventure.utils.Adventure;
-import game.adventure.utils.Constants;
+import game.adventure.interfaces.Adventure;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,8 +11,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.function.BiFunction;
-
-import static game.adventure.main.GameLogic.currentRoom;
 
 public class Combat {
     private boolean inCombat = true;
@@ -61,11 +58,11 @@ public class Combat {
 
     public Combat() {
         currentAdventure = AdventureManager.getCurrentAdventure();
-        System.out.println("You were attacked when you entered the " + currentRoom.getName() + "!");
-        for (int i = 0; i < currentRoom.getEnemies().size(); i++) {
-            Enemy e = currentRoom.getEnemies().get(i);
+        System.out.println("You were attacked when you entered the " + AdventureManager.getCurrentRoom().getName() + "!");
+        for (int i = 0; i < AdventureManager.getCurrentRoom().getEnemies().size(); i++) {
+            Enemy e = AdventureManager.getCurrentRoom().getEnemies().get(i);
             System.out.print("Enemies near you: ");
-            String separator = i == currentRoom.getEnemies().size() - 1 ? "." : ", ";
+            String separator = i == AdventureManager.getCurrentRoom().getEnemies().size() - 1 ? "." : ", ";
             System.out.println(e.getName() + " (" + e.getHealth() + " hp " + e.getDamage() + " damage)" + separator);
         }
         combatLoop();
@@ -102,32 +99,33 @@ public class Combat {
             if (!timeExpired && !correct) System.out.println("Wrong answer!");
             if (timeExpired) System.out.println("Out of time!");
 
-            if (currentRoom.getEnemies().isEmpty()) {
+            if (AdventureManager.getCurrentRoom().getEnemies().isEmpty()) {
                 System.out.println("You have defeated all the enemies!");
                 inCombat = false;
             }
 
-            for (Enemy e : currentRoom.getEnemies()) {
+            for (Enemy e : AdventureManager.getCurrentRoom().getEnemies()) {
                 currentAdventure.getPlayer().setHealth(currentAdventure.getPlayer().getHealth() - e.getDamage());
                 if (currentAdventure.getPlayer().getHealth() <= 0) {
                     GameLogic.playerDeath(e.getName());
                     return;
                 }
                 System.out.println("The " + e.getName() + " did " + e.getDamage() + " damage to you!");
-                System.out.println("You have " + Constants.player.getHealth() + " health.");
+                System.out.println("You have " + AdventureManager.getPlayer().getHealth() + " health.");
             }
 
-            System.out.print("Press enter to continue...");
-            s.nextLine();
-
+            if (inCombat) {
+                System.out.print("Press enter to continue...");
+                s.nextLine();
+            }
         }
     }
 
     private void attack() {
         List<Enemy> toRemove = new ArrayList<>();
 
-        for (Enemy e : currentRoom.getEnemies()) {
-            int damage = Constants.player.getEquip() == -1 ? 1 : Constants.player.getDamage();
+        for (Enemy e : AdventureManager.getCurrentRoom().getEnemies()) {
+            int damage = AdventureManager.getPlayer().getEquip() == -1 ? 1 : AdventureManager.getPlayer().getDamage();
 
             e.setHealth(e.getHealth() - damage);
             System.out.println("You did " + damage + " damage to the " + e.getName() + " (hp: " + e.getHealth() + ")");
@@ -138,7 +136,7 @@ public class Combat {
                 System.out.print("It dropped: ");
                 for (int i = 0; i < e.getDrops().size(); i++) {
                     Item drop = e.getDrops().get(i);
-                    currentRoom.addItem(drop);
+                    AdventureManager.getCurrentRoom().addItem(drop);
                     String separator = i == e.getDrops().size() - 1 ? "." : ", ";
 
                     System.out.println(e.getDrops().get(i).getName() + separator);
@@ -147,7 +145,7 @@ public class Combat {
         }
 
         try {
-            currentRoom.getEnemies().removeAll(toRemove);
+            AdventureManager.getCurrentRoom().getEnemies().removeAll(toRemove);
         } catch (NullPointerException ignore) {
         }
     }

@@ -1,9 +1,6 @@
 package game.adventure.gameobjects;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static game.adventure.utils.Constants.player;
 
 public class Player {
     private int equip;

@@ -31,7 +31,7 @@ public class Item {
     }
 
     public boolean isName(String name) {
-        return this.name.equals(name);
+        return getName().equalsIgnoreCase(name);
     }
 
     public boolean canPickUp() {

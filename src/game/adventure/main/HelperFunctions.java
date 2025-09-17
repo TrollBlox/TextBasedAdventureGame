@@ -2,8 +2,6 @@ package game.adventure.main;
 
 import game.adventure.gameobjects.Item;
 import game.adventure.gameobjects.Room;
-import game.adventure.utils.Constants;
-import game.adventure.utils.Utils;
 
 import java.util.List;
 
@@ -22,36 +20,36 @@ public class HelperFunctions {
     }
 
     public static void lookNorth() {
-        if (GameLogic.currentRoom.getN().isEmpty()) return;
-        if (getMap(GameLogic.currentRoom.getN()).getHasVisited()) {
-            System.out.println("To the north: " + getMap(GameLogic.currentRoom.getN()).getName());
+        if (AdventureManager.getCurrentRoom().getN().isEmpty()) return;
+        if (getMap(AdventureManager.getCurrentRoom().getN()).getHasVisited()) {
+            System.out.println("To the north: " + getMap(AdventureManager.getCurrentRoom().getN()).getName());
             return;
         }
         System.out.println("There is something to the north.");
     }
 
     public static void lookSouth() {
-        if (GameLogic.currentRoom.getS().isEmpty()) return;
-        if (getMap(GameLogic.currentRoom.getS()).getHasVisited()) {
-            System.out.println("To the south: " + getMap(GameLogic.currentRoom.getS()).getName());
+        if (AdventureManager.getCurrentRoom().getS().isEmpty()) return;
+        if (getMap(AdventureManager.getCurrentRoom().getS()).getHasVisited()) {
+            System.out.println("To the south: " + getMap(AdventureManager.getCurrentRoom().getS()).getName());
             return;
         }
         System.out.println("There is something to the south.");
     }
 
     public static void lookEast() {
-        if (GameLogic.currentRoom.getE().isEmpty()) return;
-        if (getMap(GameLogic.currentRoom.getE()).getHasVisited()) {
-            System.out.println("To the east: " + getMap(GameLogic.currentRoom.getE()).getName());
+        if (AdventureManager.getCurrentRoom().getE().isEmpty()) return;
+        if (getMap(AdventureManager.getCurrentRoom().getE()).getHasVisited()) {
+            System.out.println("To the east: " + getMap(AdventureManager.getCurrentRoom().getE()).getName());
             return;
         }
         System.out.println("There is something to the east.");
     }
 
     public static void lookWest() {
-        if (GameLogic.currentRoom.getW().isEmpty()) return;
-        if (getMap(GameLogic.currentRoom.getW()).getHasVisited()) {
-            System.out.println("To the west: " + getMap(GameLogic.currentRoom.getW()).getName());
+        if (AdventureManager.getCurrentRoom().getW().isEmpty()) return;
+        if (getMap(AdventureManager.getCurrentRoom().getW()).getHasVisited()) {
+            System.out.println("To the west: " + getMap(AdventureManager.getCurrentRoom().getW()).getName());
             return;
         }
         System.out.println("There is something to the west.");
@@ -69,8 +67,7 @@ public class HelperFunctions {
     }
 
     public static Room getMap(String name) {
-        for (int i = 0; i < Constants.map.size(); i++) {
-            Room room = Constants.map.get(i);
+        for (Room room : AdventureManager.getCurrentAdventure().getMap()) {
             if (room.getName().equals(name)) return room;
         }
         throw new RuntimeException("Unknown Room!");
@@ -84,7 +81,20 @@ public class HelperFunctions {
     }
 
     public static void removeItem(Item item) {
-        GameLogic.currentRoom.removeItem(item);
-        Constants.player.removeItem(item);
+        AdventureManager.getCurrentRoom().removeItem(item);
+        AdventureManager.getCurrentAdventure().getPlayer().removeItem(item);
     }
+
+    public static Item getItemFromName(String name) {
+        for (Item item : AdventureManager.getPlayer().getInventory()) {
+            if (item.isName(name)) return item;
+        }
+        for (Room room : AdventureManager.getCurrentAdventure().getMap()) {
+            for (Item item : room.getItems()) {
+                if (item.isName(name)) return item;
+            }
+        }
+        throw new RuntimeException("Item not found!");
+    }
+
 }

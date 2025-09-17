@@ -2,46 +2,47 @@ package game.adventure.main;
 
 import game.adventure.gameobjects.Enemy;
 import game.adventure.gameobjects.Item;
-import game.adventure.gameobjects.Room;
-import game.adventure.utils.Constants;
-import game.adventure.utils.GameInit;
-import game.adventure.utils.Utils;
+import game.adventure.objects.ItemPair;
+import game.adventure.interfaces.Adventure;
+
 import java.util.*;
 
 public class GameLogic {
     private static final Scanner s = new Scanner(System.in);
 
-    public static final GameInit gi = new GameInit();
+    private GameLogic() { }
 
-    public static Room currentRoom;
+    public static void start() {
+        takeInput();
+    }
 
-    public void takeInput() {
+    private static void takeInput() {
         String input;
         System.out.println("Press h for help!");
 
-        String n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
+        String n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
 
-        System.out.println("You find yourself in a" + n + currentRoom.getName());
+        System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
         do {
-            currentRoom.setHasVisited(true);
+            AdventureManager.getCurrentRoom().setHasVisited(true);
             System.out.print("> ");
             input = s.nextLine().toLowerCase();
             ParseCommand(input);
         } while (!input.equals("q") && !input.equals("quit"));
     }
 
-    public void ParseCommand(String input) {
+    private static void ParseCommand(String input) {
         List<String> wordList;
         wordList = wordList(input);
 
         try {
-            wordList.getFirst();
+            wordList.get(0);
         } catch (IndexOutOfBoundsException e) {
             System.out.println("You must enter a command!");
             return;
         }
 
-        switch (wordList.getFirst()) {
+        switch (wordList.get(0)) {
             case "n":
             case "north":
             case "s":
@@ -86,56 +87,56 @@ public class GameLogic {
             case "quit":
                 break;
             default:
-                System.out.println("I don't understand " + wordList.getFirst());
+                System.out.println("I don't understand " + wordList.get(0));
                 break;
         }
     }
 
-    public static void playerDeath(String killer) {
+    static void playerDeath(String killer) {
         System.out.println("The " + killer + " killed you!");
         System.out.println("rip bozo");
         System.exit(0);
     }
 
-    public void equipCommand(List<String> wordList) {
+    private static void equipCommand(List<String> wordList) {
         if (wordList.size() == 1) {
-            Constants.player.removeEquip();
+            AdventureManager.getPlayer().removeEquip();
             System.out.println("Removed your equip");
             return;
         }
 
         String o = HelperFunctions.parseItemName(wordList);
 
-        if (!Constants.player.hasItem(o)) {
+        if (!AdventureManager.getPlayer().hasItem(o)) {
             System.out.println("You don't have the item " + o + "!");
             return;
         }
 
-        if (Constants.player.getItem(o).getDamage() == -1) {
+        if (AdventureManager.getPlayer().getItem(o).getDamage() == -1) {
             System.out.println("You can't equip " + o + "!");
             return;
         }
 
-        Constants.player.setEquip(o);
+        AdventureManager.getPlayer().setEquip(o);
         System.out.println("Equipped " + o);
     }
 
-    public void inspectItem(List<String> wordList) {
+    private static void inspectItem(List<String> wordList) {
         String o = HelperFunctions.parseItemName(wordList);
 
-        for (Item i : currentRoom.getItems()) {
+        for (Item i : AdventureManager.getCurrentRoom().getItems()) {
             if (i.getName().equalsIgnoreCase(o)) {
                 System.out.println(i.getName() + ": " + i.getDescription());
                 return;
             }
         }
-        for (Item i : Constants.player.getInventory()) {
+        for (Item i : AdventureManager.getPlayer().getInventory()) {
             if (i.getName().equalsIgnoreCase(o)) {
                 System.out.println(i.getName() + ": " + i.getDescription());
                 return;
             }
         }
-        for (Enemy e : currentRoom.getEnemies()) {
+        for (Enemy e : AdventureManager.getCurrentRoom().getEnemies()) {
             if (e.getName().equalsIgnoreCase(o)) {
                 System.out.println(e.getName() + " (" + e.getHealth() + " hp " + e.getDamage() + " damage): " + e.getDescription());
                 return;
@@ -144,7 +145,7 @@ public class GameLogic {
         System.out.println("I don't know what " + o + " is!");
     }
 
-    public void helpCommand() {
+    private static void helpCommand() {
         System.out.println("""
                 Quit - "q"
                 Look - "l" or "l <item>"
@@ -157,75 +158,75 @@ public class GameLogic {
                 Movement - "n", "s", "e", and "w\"""");
     }
 
-    public void lookItemsCommand() {
-        if (currentRoom.getItems().isEmpty()) {
+    private static void lookItemsCommand() {
+        if (AdventureManager.getCurrentRoom().getItems().isEmpty()) {
             System.out.println("There are no items in this room!");
             return;
         }
 
         System.out.print("Items near you: ");
-        for (int i = 0; i < currentRoom.getItems().size(); i++) {
-            String separator = i == currentRoom.getItems().size() - 1 ? "." : ", ";
+        for (int i = 0; i < AdventureManager.getCurrentRoom().getItems().size(); i++) {
+            String separator = i == AdventureManager.getCurrentRoom().getItems().size() - 1 ? "." : ", ";
 
-            System.out.print(currentRoom.getItem(i).getName() + separator);
+            System.out.print(AdventureManager.getCurrentRoom().getItem(i).getName() + separator);
         }
         System.out.println();
 
     }
 
-    public void lookCommand(List<String> wordList) {
+    private static void lookCommand(List<String> wordList) {
         if (wordList.size() > 1) {
             inspectItem(wordList);
             return;
         }
 
-        System.out.println(currentRoom.getName() + ": " + currentRoom.getDescription());
+        System.out.println(AdventureManager.getCurrentRoom().getName() + ": " + AdventureManager.getCurrentRoom().getDescription());
 
         lookItemsCommand();
 
         HelperFunctions.lookCardinal();
 
-        if (currentRoom.getEnemies().isEmpty()) return;
+        if (AdventureManager.getCurrentRoom().getEnemies().isEmpty()) return;
 
-        for (int i = 0; i < currentRoom.getEnemies().size(); i++) {
-            Enemy e = currentRoom.getEnemies().get(i);
+        for (int i = 0; i < AdventureManager.getCurrentRoom().getEnemies().size(); i++) {
+            Enemy e = AdventureManager.getCurrentRoom().getEnemies().get(i);
             System.out.println("Enemies near you: ");
             System.out.println(e.getName() + ": " + e.getDescription());
         }
     }
 
-    public void getInventory() {
-        if (Constants.player.getInventory().isEmpty() || (Constants.player.getInventory().size() == 1 && Constants.player.getEquip() != -1)) {
+    private static void getInventory() {
+        if (AdventureManager.getPlayer().getInventory().isEmpty() || (AdventureManager.getPlayer().getInventory().size() == 1 && AdventureManager.getPlayer().getEquip() != -1)) {
             System.out.println("You have nothing in your inventory!");
             return;
         }
 
         System.out.println("Your inventory: ");
-        for (int i = 0; i < Constants.player.getInventory().size(); i++) {
-            if (i == Constants.player.getEquip()) {
+        for (int i = 0; i < AdventureManager.getPlayer().getInventory().size(); i++) {
+            if (i == AdventureManager.getPlayer().getEquip()) {
                 continue;
             }
 
-            String nameSuffix = Constants.player.getItem(i).getDamage() == -1 ? ": " : " (" + Constants.player.getItem(i).getDamage() + " damage): ";
+            String nameSuffix = AdventureManager.getPlayer().getItem(i).getDamage() == -1 ? ": " : " (" + AdventureManager.getPlayer().getItem(i).getDamage() + " damage): ";
 
-            System.out.println(Constants.player.getItem(i).getName() + nameSuffix + Constants.player.getItem(i).getDescription());
+            System.out.println(AdventureManager.getPlayer().getItem(i).getName() + nameSuffix + AdventureManager.getPlayer().getItem(i).getDescription());
         }
     }
 
-    public void inventoryCommand() {
-        System.out.println("Health: " + Constants.player.getHealth());
-        int damage = Constants.player.getEquip() == -1 ? 1 : Constants.player.getDamage();
+    private static void inventoryCommand() {
+        System.out.println("Health: " + AdventureManager.getPlayer().getHealth());
+        int damage = AdventureManager.getPlayer().getEquip() == -1 ? 1 : AdventureManager.getPlayer().getDamage();
         System.out.println("Damage: " + damage);
         System.out.println();
 
         getInventory();
 
-        if (Constants.player.getEquip() != -1) {
-            System.out.println("\nEquipped item: \n" + Constants.player.getEquipItem().getName() + " (" + Constants.player.getDamage() + " damage): " + Constants.player.getEquipItem().getDescription());
+        if (AdventureManager.getPlayer().getEquip() != -1) {
+            System.out.println("\nEquipped item: \n" + AdventureManager.getPlayer().getEquipItem().getName() + " (" + AdventureManager.getPlayer().getDamage() + " damage): " + AdventureManager.getPlayer().getEquipItem().getDescription());
         }
     }
 
-    public List<String> wordList(String input) {
+    private static List<String> wordList(String input) {
         String delims = "\s\t,.:;?!\"'";
         List<String> strList = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(input, delims);
@@ -239,7 +240,7 @@ public class GameLogic {
         return strList;
     }
 
-    public void useCommand(List<String> wordList) {
+    private static void useCommand(List<String> wordList) {
         String o, oo;
 
         try {
@@ -260,20 +261,24 @@ public class GameLogic {
 
             oo = HelperFunctions.parseItemName(wordList);
 
-            if (!((Constants.player.hasItem(o) || currentRoom.hasItem(o)) && ((Constants.player.hasItem(oo) || currentRoom.hasItem(oo))))) {
+            Item item1 = HelperFunctions.getItemFromName(o);
+            Item item2 = HelperFunctions.getItemFromName(oo);
+
+            if (!((AdventureManager.getPlayer().hasItem(o) || (AdventureManager.getCurrentRoom().hasItem(o) && !item1.canPickUp())) &&
+                    ((AdventureManager.getPlayer().hasItem(oo) || (AdventureManager.getCurrentRoom().hasItem(oo) && !item2.canPickUp()))))) {
                 System.out.println("You don't have that item!");
                 return;
             }
 
-            Utils.useFetcher(o, oo).run();
+            AdventureManager.getCurrentAdventure().useFetcher().get(new ItemPair(item1, item2)).run();
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Not enough information provided!");
         }
     }
 
-    public void takeCommand(List<String> wordList) {
+    private static void takeCommand(List<String> wordList) {
         if (wordList.size() <= 1) {
-            System.out.println("What item would you like to take?");
+            System.out.println("Please specify the item to take!");
             return;
         }
 
@@ -281,23 +286,23 @@ public class GameLogic {
 
         o = HelperFunctions.parseItemName(wordList);
 
-        if (!currentRoom.hasItem(o)) {
+        if (!AdventureManager.getCurrentRoom().hasItem(o)) {
             System.out.println("Can't find that item!");
             return;
         }
 
-        if (!currentRoom.getItem(o).canPickUp()) {
+        if (!AdventureManager.getCurrentRoom().getItem(o).canPickUp()) {
             System.out.println("You can't take that item!");
             return;
         }
 
-        Constants.player.addItem(currentRoom.getItem(o));
-        currentRoom.removeItem(o);
-        System.out.println("You took the " + Constants.player.getItem(o).getName() + ".");
+        AdventureManager.getPlayer().addItem(AdventureManager.getCurrentRoom().getItem(o));
+        AdventureManager.getCurrentRoom().removeItem(o);
+        System.out.println("You took the " + AdventureManager.getPlayer().getItem(o).getName() + ".");
 
     }
 
-    public void dropCommand(List<String> wordList) {
+    private static void dropCommand(List<String> wordList) {
         if (wordList.size() <= 1) {
             System.out.println("What item would you like to drop?");
             return;
@@ -307,74 +312,75 @@ public class GameLogic {
 
         o = HelperFunctions.parseItemName(wordList);
 
-        if (!Constants.player.hasItem(o)) {
+        if (!AdventureManager.getPlayer().hasItem(o)) {
             System.out.println("You don't have that item!");
         }
 
-        if (Constants.player.isEquip(o)) {
-            Constants.player.setEquip(-1);
+        if (AdventureManager.getPlayer().isEquip(o)) {
+            AdventureManager.getPlayer().setEquip(-1);
         }
 
-        currentRoom.addItem(Constants.player.getItem(o));
-        Constants.player.removeItem(o);
-        System.out.println("You dropped the " + currentRoom.getItem(o).getName() + ".");
+        AdventureManager.getCurrentRoom().addItem(AdventureManager.getPlayer().getItem(o));
+        AdventureManager.getPlayer().removeItem(o);
+        System.out.println("You dropped the " + AdventureManager.getCurrentRoom().getItem(o).getName() + ".");
 
     }
 
-    public void getDirection(List<String> input) {
+    private static void getDirection(List<String> input) {
         boolean roomChanged = false;
-        String direction = input.getFirst();
+        String direction = input.get(0);
         String n;
 
         try {
             switch (direction) {
                 case "n", "north" -> {
-                    if (currentRoom.getN().isEmpty()) {
+                    if (AdventureManager.getCurrentRoom().getN().isEmpty()) {
                         System.out.println("You can't go north here!");
                         return;
                     }
                     roomChanged = true;
-                    currentRoom = HelperFunctions.getMap(currentRoom.getN());
-                    n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
-                    System.out.println("You find yourself in a" + n + currentRoom.getName());
+                    AdventureManager.setCurrentRoom(HelperFunctions.getMap(AdventureManager.getCurrentRoom().getN()));
+                    n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
+                    System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
                 }
                 case "s", "south" -> {
-                    if (currentRoom.getS().isEmpty()) {
+                    if (AdventureManager.getCurrentRoom().getS().isEmpty()) {
                         System.out.println("You can't go south here!");
                         return;
                     }
                     roomChanged = true;
-                    currentRoom = HelperFunctions.getMap(currentRoom.getS());
-                    n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
-                    System.out.println("You find yourself in a" + n + currentRoom.getName());
+                    AdventureManager.setCurrentRoom(HelperFunctions.getMap(AdventureManager.getCurrentRoom().getS()));
+                    n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
+                    System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
                 }
                 case "e", "east" -> {
-                    if (currentRoom.getE().isEmpty()) {
+                    if (AdventureManager.getCurrentRoom().getE().isEmpty()) {
                         System.out.println("You can't go east here!");
                         return;
                     }
                     roomChanged = true;
-                    currentRoom = HelperFunctions.getMap(currentRoom.getE());
-                    n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
-                    System.out.println("You find yourself in a" + n + currentRoom.getName());
+                    AdventureManager.setCurrentRoom(HelperFunctions.getMap(AdventureManager.getCurrentRoom().getE()));
+                    n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
+                    System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
                 }
                 case "w", "west" -> {
-                    if (currentRoom.getW().isEmpty()) {
+                    if (AdventureManager.getCurrentRoom().getW().isEmpty()) {
                         System.out.println("You can't go west here!");
                         return;
                     }
                     roomChanged = true;
-                    currentRoom = HelperFunctions.getMap(currentRoom.getW());
-                    n = HelperFunctions.startsWithVowel(currentRoom.getName()) ? "n " : " ";
-                    System.out.println("You find yourself in a" + n + currentRoom.getName());
+                    AdventureManager.setCurrentRoom(HelperFunctions.getMap(AdventureManager.getCurrentRoom().getW()));
+                    n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
+                    System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
                 }
             }
         } finally {
-            if (currentRoom.getEnemies().isEmpty() || !roomChanged) {
+            if (AdventureManager.getCurrentRoom().getEnemies().isEmpty() || !roomChanged) {
                 return;
             }
             new Combat();
 
         }
     }
+    
 }

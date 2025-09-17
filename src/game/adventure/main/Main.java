@@ -21,11 +21,12 @@ public class Main {
         System.out.println("Which adventure do you want to play? Enter 1 - " + adventures.size());
         System.out.print("> ");
         int input = Integer.parseInt(s.nextLine()) - 1;
-        if (input < 1 || input > adventures.size()) {
+        if (input < 0 || input > adventures.size()) {
             System.out.println("wtf man");
             return;
         }
         AdventureManager.setCurrentAdventure(adventures.get(input));
+        AdventureManager.getCurrentAdventure().init();
         GameLogic.start();
     }
 }

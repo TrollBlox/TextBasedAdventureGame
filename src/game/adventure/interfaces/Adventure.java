@@ -4,7 +4,6 @@ import game.adventure.gameobjects.Player;
 import game.adventure.gameobjects.Room;
 import game.adventure.objects.DefaultHashMap;
 import game.adventure.objects.ItemPair;
-
 import java.util.List;
 
 public interface Adventure {

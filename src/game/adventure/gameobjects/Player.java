@@ -56,7 +56,8 @@ public class Player {
     }
 
     public Item getEquipItem() {
-        return getItem(getEquip());
+        int index = getEquip();
+        return index == -1 ? new Item("", "", false, -1) : getItem(index);
     }
 
     public Item getItem(int i) {

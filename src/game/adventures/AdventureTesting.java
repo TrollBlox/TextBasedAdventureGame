@@ -52,4 +52,9 @@ public class AdventureTesting implements Adventure {
     public List<Room> getMap() {
         return map;
     }
+
+    @Override
+    public String getName() {
+        return "Adventure Testing";
+    }
 }

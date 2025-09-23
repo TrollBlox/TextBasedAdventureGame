@@ -16,4 +16,6 @@ public interface Adventure {
     Player getPlayer();
 
     List<Room> getMap();
+
+    String getName();
 }

@@ -3,7 +3,6 @@ package game.adventure.main;
 import game.adventure.gameobjects.Enemy;
 import game.adventure.gameobjects.Item;
 import game.adventure.objects.ItemPair;
-import game.adventure.interfaces.Adventure;
 
 import java.util.*;
 
@@ -13,6 +12,7 @@ public class GameLogic {
     private GameLogic() { }
 
     public static void start() {
+        AdventureManager.getCurrentAdventure().init();
         takeInput();
     }
 
@@ -82,7 +82,6 @@ public class GameLogic {
             case "equip":
                 equipCommand(wordList);
                 break;
-            case "a":
             case "q":
             case "quit":
                 break;
@@ -152,7 +151,6 @@ public class GameLogic {
                 Inventory - "i"
                 Take - "t <item>"
                 Drop - "d <item>"
-                Attack - "a"
                 Equip - "eq <item>"
                 Use - "u <item1> on <item2>"
                 Movement - "n", "s", "e", and "w\"""");

@@ -1,6 +1,7 @@
 package game.adventure.gameobjects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Room {
@@ -102,6 +103,10 @@ public class Room {
 
     public void addItem(Item item) {
         items.add(item);
+    }
+
+    public void addItems(Item... items) {
+        this.items.addAll(Arrays.asList(items));
     }
 
     public void removeItem(int index) {

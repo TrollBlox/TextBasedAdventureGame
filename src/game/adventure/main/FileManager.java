@@ -3,6 +3,7 @@ package game.adventure.main;
 import game.adventure.interfaces.Adventure;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -29,10 +30,7 @@ public class FileManager {
 
     private void loadAdventures() {
         File gameDirectory = new File(saveDirectory);
-        if (!gameDirectory.exists() || !gameDirectory.isDirectory()) {
-            System.err.println(saveDirectory + " folder was not found");
-            return;
-        }
+        if (gameDirectory.mkdirs()) return;
         File[] jarFiles = gameDirectory.listFiles((dir, name) -> name.endsWith(".jar"));
         if (jarFiles == null || jarFiles.length == 0) {
             System.out.println("no jars found in " + saveDirectory);

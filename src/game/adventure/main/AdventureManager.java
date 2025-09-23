@@ -3,10 +3,9 @@ package game.adventure.main;
 import game.adventure.gameobjects.Player;
 import game.adventure.gameobjects.Room;
 import game.adventure.interfaces.Adventure;
-import game.adventures.AdventureTesting;
 
 public class AdventureManager {
-    private static Adventure currentAdventure = new AdventureTesting(); // temp for testing
+    private static Adventure currentAdventure; // temp for testing
     private static Room currentRoom;
 
     public static Adventure getCurrentAdventure() {

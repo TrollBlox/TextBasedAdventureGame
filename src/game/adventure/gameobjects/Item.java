@@ -4,9 +4,9 @@ public class Item {
     private String name;
     private String description;
     private boolean canPickUp;
-
     private int damage;
 
+    /** a damage value of -1 would make the item non-equippable */
     public Item(String name, String description, boolean canPickUp, int damage) {
         this.name = name;
         this.description = description;

@@ -117,4 +117,9 @@ public class BasicAdventure implements Adventure {
     public List<Room> getMap() {
         return map;
     }
+
+    @Override
+    public String getName() {
+        return "Basic Adventure";
+    }
 }

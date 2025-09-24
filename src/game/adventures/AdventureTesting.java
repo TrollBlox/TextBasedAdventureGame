@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdventureTesting implements Adventure {
+    private static final List<Item> items = new ArrayList<>();
     private static final Player player = new Player(100, new ArrayList<>(), -1);
     private static final List<Room> map = new ArrayList<>();
     private static final Room room = new Room("Testing Chamber", "test", "", "", "", "");
@@ -31,6 +32,7 @@ public class AdventureTesting implements Adventure {
         itemUses.put(new ItemPair(dullSword, rock), rockOnSword);
         player.addItem(dullSword);
         player.addItem(rock);
+        items.addAll(List.of(dullSword, rock, sharpSword));
     }
 
     @Override
@@ -56,5 +58,10 @@ public class AdventureTesting implements Adventure {
     @Override
     public String getName() {
         return "Adventure Testing";
+    }
+
+    @Override
+    public List<Item> getItems() {
+        return items;
     }
 }

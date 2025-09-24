@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BasicAdventure implements Adventure {
+    private final List<Item> items = new ArrayList<>();
     private final List<Item> playerInventory = new ArrayList<>();
 
     private final Player player = new Player(5, playerInventory, -1);
@@ -96,6 +97,7 @@ public class BasicAdventure implements Adventure {
         itemUses.put(new ItemPair(scalpel, pen), scalpelOnPen);
         itemUses.put(new ItemPair(key, doorLock), keyOnClosetDoor);
         itemUses.put(new ItemPair(smallKey, lockBox), smallKeyOnLockBox);
+        items.addAll(List.of(sword, pen, lockBox, scalpel, key, broom, doorLock, brokenPen, rottenFlesh, smallKey, tutorial3, unlockBox, tutorial1, tutorial2));
     }
 
     @Override
@@ -121,5 +123,10 @@ public class BasicAdventure implements Adventure {
     @Override
     public String getName() {
         return "Basic Adventure";
+    }
+
+    @Override
+    public List<Item> getItems() {
+        return items;
     }
 }

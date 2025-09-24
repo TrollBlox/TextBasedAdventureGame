@@ -86,13 +86,8 @@ public class HelperFunctions {
     }
 
     public static Item getItemFromName(String name) {
-        for (Item item : AdventureManager.getPlayer().getInventory()) {
+        for (Item item : AdventureManager.getCurrentAdventure().getItems()) {
             if (item.isName(name)) return item;
-        }
-        for (Room room : AdventureManager.getCurrentAdventure().getMap()) {
-            for (Item item : room.getItems()) {
-                if (item.isName(name)) return item;
-            }
         }
         throw new RuntimeException("Item not found!");
     }

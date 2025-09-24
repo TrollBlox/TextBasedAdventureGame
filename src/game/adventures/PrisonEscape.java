@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrisonEscape implements Adventure {
+    private static final List<Item> items = new ArrayList<>();
     private static final List<Room> map = new ArrayList<>();
     private static final Player player = new Player(100, new ArrayList<>(), -1);
     private static final Runnable defaultUse = () -> System.out.println("You can't use those items together!");
@@ -30,7 +31,7 @@ public class PrisonEscape implements Adventure {
     private static final Runnable toolOnApple = () -> {
         player.removeItem(apple);
         player.addItem(cabinetKey);
-        System.out.println("You cut open the apple finding a key inside!");
+        System.out.println("You cut open the apple and found a key inside!");
     };
     private static final Runnable keyOnCabinet = () -> {
         player.addItem(badge);
@@ -72,6 +73,7 @@ public class PrisonEscape implements Adventure {
         itemUses.put(new ItemPair(toiletPaper, toilet), toiletPaperOnToilet);
         itemUses.put(new ItemPair(multipurposeTool, pillow), toolOnPillow);
         itemUses.put(new ItemPair(badge, uniform), badgeOnUniform);
+        items.addAll(List.of(toilet, cabinet, multipurposeTool, apple, toiletPaper, cabinetKey, badge, water, pillow, uniform, guardUniform));
     }
 
     @Override
@@ -97,5 +99,10 @@ public class PrisonEscape implements Adventure {
     @Override
     public String getName() {
         return "Prison Escape";
+    }
+
+    @Override
+    public List<Item> getItems() {
+        return items;
     }
 }

@@ -1,5 +1,6 @@
 package game.adventure.interfaces;
 
+import game.adventure.gameobjects.Item;
 import game.adventure.gameobjects.Player;
 import game.adventure.gameobjects.Room;
 import game.adventure.objects.DefaultHashMap;
@@ -18,4 +19,6 @@ public interface Adventure {
     List<Room> getMap();
 
     String getName();
+
+    List<Item> getItems();
 }

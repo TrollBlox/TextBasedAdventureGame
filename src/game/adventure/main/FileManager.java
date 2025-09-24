@@ -19,7 +19,7 @@ public class FileManager {
         String os = System.getProperty("os.name").toLowerCase();
         String userHome = System.getProperty("user.home");
         if (os.contains("win")) {
-            saveDirectory = userHome + "/Documents/Adventures/";
+            saveDirectory = userHome + "\\Documents\\Adventures\\";
         } else if (os.contains("mac")) {
             throw new RuntimeException("mac not supported");
         } else {

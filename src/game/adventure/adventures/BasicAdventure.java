@@ -1,4 +1,4 @@
-package game.adventures;
+package game.adventure.adventures;
 
 import game.adventure.gameobjects.*;
 import game.adventure.interfaces.Adventure;

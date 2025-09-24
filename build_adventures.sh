@@ -12,7 +12,7 @@ CORE_JAR="$OUT_DIR/TextBasedAdventureGame.jar"
 rm -rf "$CLASS_DIR"
 mkdir -p "$CLASS_DIR"
 
-# Loop through each .java file in src/game.adventures/
+# Loop through each .java file in src/game.adventure.adventures/
 for file in "$ADVENTURES_DIR"/*.java; do
     [ -e "$file" ] || continue
     filename=$(basename -- "$file")

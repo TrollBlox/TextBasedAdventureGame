@@ -11,15 +11,21 @@ public class Main {
         FileManager fileManager = new FileManager();
         List<Adventure> adventures = fileManager.getAdventures();
         boolean adventureChosen = false;
-        int input;
+        int input = -2;
         do {
             System.out.println("Adventures available: ");
+            System.out.println("0: " + AdventureManager.getCurrentAdventure().getName());
             for (int i = 0; i < adventures.size(); i++) {
                 System.out.println(i + 1 + ": " + adventures.get(i).getName());
             }
-            System.out.println("Which adventure do you want to play? Enter 1 - " + adventures.size());
+            System.out.println("Which adventure do you want to play? Enter 0 - " + adventures.size());
             System.out.print("> ");
-            input = Integer.parseInt(s.nextLine()) - 1;
+            try {
+                input = Integer.parseInt(s.nextLine()) - 1;
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            if (input == -1) GameLogic.start(); // TODO: REMOVE LATER
             if (input > 0 && input < adventures.size()) {
                 adventureChosen = true;
             } else {

@@ -241,6 +241,11 @@ public class GameLogic {
     private static void useCommand(List<String> wordList) {
         String o, oo;
 
+        if (wordList.size() < 4) {
+            System.out.println("Not enough parameters!");
+            return;
+        }
+
         try {
             StringBuilder builder = new StringBuilder();
             for (int i = 1; i < wordList.size(); i++) {

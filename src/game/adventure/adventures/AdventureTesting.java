@@ -3,46 +3,34 @@ package game.adventure.adventures;
 import game.adventure.gameobjects.Item;
 import game.adventure.gameobjects.Player;
 import game.adventure.gameobjects.Room;
-import game.adventure.interfaces.Adventure;
-import game.adventure.objects.DefaultHashMap;
+import game.adventure.util.Adventure;
 import game.adventure.objects.ItemPair;
-import java.util.ArrayList;
-import java.util.List;
+import game.adventure.util.AdventureContext;
 
-public class AdventureTesting implements Adventure {
-    private static final List<Item> items = new ArrayList<>();
-    private static final Player player = new Player(100, new ArrayList<>(), -1);
-    private static final List<Room> map = new ArrayList<>();
-    private static final Room room = new Room("Testing Chamber", "test", "", "", "", "");
-    private static final Item dullSword = new Item("Dull Sword", "a sword thats dull", true, 0);
-    private static final Item rock = new Item("Rock", "maybe this could sharpen something", true, -1);
-    private static final Item sharpSword = new Item("Sharp Sword", "a newly sharpened sword", true, 5);
-    private static final Runnable defaultUse = () -> System.out.println("You can't use those items together. Maybe try putting them in the opposite order.");
-    private static final Runnable rockOnSword = () -> {
-        player.removeItem(dullSword);
-        player.removeItem(rock);
-        player.addItem(sharpSword);
-        System.out.println("You sharpened the sword!");
-    };
-    private static final DefaultHashMap<ItemPair, Runnable> itemUses = new DefaultHashMap<>(defaultUse);
+public class AdventureTesting extends Adventure {
+    private static final AdventureContext context = new AdventureContext();
+
+    private static final Player player = new Player.Builder().build();
 
     @Override
     public void init() {
-        map.add(room);
-        itemUses.put(new ItemPair(dullSword, rock), rockOnSword);
-        player.addItem(dullSword);
-        player.addItem(rock);
-        items.addAll(List.of(dullSword, rock, sharpSword));
+        context.registerItem("dull_sword", new Item.Builder().name("Dull Sword").description("a sword that's dull").damage(1).equippable(true));
+        context.registerItem("rock", new Item.Builder().name("Rock").description("maybe this could sharpen something"));
+        context.registerItem("sharp_sword", new Item.Builder().name("Sharp Sword").description("a newly sharpened sword").damage(5).equippable(true));
+
+        context.registerRoom("chamber", new Room.Builder().name("Testing Chamber").description("test").items(context.getItem("rock"), context.getItem("dull_sword")));
+
+        context.registerItemUse(new ItemPair(context.getItem("dull_sword"), context.getItem("rock")), () -> {
+            player.removeItem(context.getItem("dull_sword"));
+            player.removeItem(context.getItem("rock"));
+            player.addItem(context.getItem("sharp_sword"));
+            System.out.println("You used the rock to sharpen the sword.");
+        });
     }
 
     @Override
     public Room getStartingRoom() {
-        return room;
-    }
-
-    @Override
-    public DefaultHashMap<ItemPair, Runnable> useFetcher() {
-        return itemUses;
+        return context.getRoom("chamber");
     }
 
     @Override
@@ -51,17 +39,12 @@ public class AdventureTesting implements Adventure {
     }
 
     @Override
-    public List<Room> getMap() {
-        return map;
-    }
-
-    @Override
     public String getName() {
         return "Adventure Testing";
     }
 
     @Override
-    public List<Item> getItems() {
-        return items;
+    public AdventureContext getContext() {
+        return context;
     }
 }

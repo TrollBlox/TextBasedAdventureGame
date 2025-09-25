@@ -1,12 +1,16 @@
 package game.adventure.main;
 
+import game.adventure.gameobjects.Enemy;
+import game.adventure.gameobjects.Item;
 import game.adventure.gameobjects.Player;
 import game.adventure.gameobjects.Room;
-import game.adventure.interfaces.Adventure;
-import game.adventure.adventures.PrisonEscape;
+import game.adventure.util.Adventure;
+import game.adventure.util.AdventureContext;
+
+import java.util.List;
 
 public class AdventureManager {
-    private static Adventure currentAdventure = new PrisonEscape(); // temp for testing
+    private static Adventure currentAdventure; // temp for testing
     private static Room currentRoom;
 
     public static Adventure getCurrentAdventure() {
@@ -27,5 +31,21 @@ public class AdventureManager {
 
     public static void setCurrentAdventure(Adventure adventure) {
         currentAdventure = adventure;
+    }
+
+    public static AdventureContext getContext() {
+        return currentAdventure.getContext();
+    }
+
+    public static List<Item> getItems() {
+        return getContext().getItems();
+    }
+
+    public static List<Enemy> getEnemies() {
+        return getContext().getEnemies();
+    }
+
+    public static List<Room> getRooms() {
+        return getContext().getRooms();
     }
 }

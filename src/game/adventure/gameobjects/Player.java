@@ -1,105 +1,89 @@
 package game.adventure.gameobjects;
 
-import game.adventure.main.HelperFunctions;
+import game.adventure.util.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private int equip;
-
+    private Item equip;
     private int health;
+    private final List<Item> inventory;
 
-    private final List<Item> playerInventory;
-
-    /** equip should be an index in the players inventory. if the number is out of bounds, the player will automatically have no equip. -1 == no equip */
-    public Player(int health, List<Item> playerInventory, int equip) {
-        this.health = health;
-        this.playerInventory = playerInventory;
-        if (equip + 1 > playerInventory.size() || equip + 1 < 0 || playerInventory.isEmpty()) {
-            this.equip = -1;
-        } else {
-            this.equip = equip;
-        }
+    public Player(Builder builder) {
+        this.health = builder.health;
+        this.inventory = builder.inventory;
+        this.equip = builder.equip;
     }
 
-    public boolean isEquip(String item) {
-        int index = getInt(item);
-        if (index == -1) {
-            return false;
-        }
-        return index == getEquip();
+    public boolean isEquip(Item item) {
+        return equip.equals(item);
     }
 
-    public void setEquip(String item) throws IndexOutOfBoundsException {
-        int index = getInt(item);
-        setEquip(index);
+    public void setEquip(String item) {
+        setEquip(getItem(item));
     }
 
     public void removeEquip() {
-        setEquip(-1);
+        setEquip(Constants.GENERIC_ITEM);
     }
 
     public void addItem(Item newItem) {
-        playerInventory.add(newItem);
-    }
-
-    private int getInt(String item) {
-        return playerInventory.indexOf(HelperFunctions.getItemFromName(item));
+        System.out.println("New Item: " + newItem.getName());
+        inventory.add(newItem);
     }
 
     public int getDamage() {
-        if (getEquip() == -1) return -1;
-        return getItem(getEquip()).getDamage();
-    }
-
-    public Item getEquipItem() {
-        int index = getEquip();
-        return index == -1 ? new Item("", "", false, -1) : getItem(index);
+        return getEquip().getDamage();
     }
 
     public Item getItem(int i) {
-        return playerInventory.get(i);
+        return inventory.get(i);
     }
 
-    public Item getItem(String item) throws IndexOutOfBoundsException {
-        int i = getInt(item);
-        if (i == -1) {
-            throw new IndexOutOfBoundsException();
+    public Item getItem(String itemName) {
+        for (Item item : inventory) {
+            if (item.getName().equalsIgnoreCase(itemName)) return item;
         }
-        return playerInventory.get(i);
+        return Constants.GENERIC_ITEM;
     }
 
-    public boolean hasItem(String item) {
-        return getInt(item) != -1;
+    public boolean hasItem(String itemName) {
+        for (Item item : inventory) {
+            if (item.getName().equalsIgnoreCase(itemName)) return true;
+        }
+        return false;
     }
 
     public void removeItem(Item oldItem) {
-        if (isEquip(oldItem.getName())) removeEquip();
-        playerInventory.remove(oldItem);
+        if (isEquip(oldItem)) removeEquip();
+        else inventory.remove(oldItem);
     }
 
-    public void removeItem(String oldItem) throws IndexOutOfBoundsException {
-        int index = getInt(oldItem);
-        if (index == -1) {
-            throw new IndexOutOfBoundsException();
-        }
-        removeItem(getItem(index));
+    public void removeItem(String oldItem) {
+        removeItem(getItem(oldItem));
     }
 
     public void clearInventory() {
-        playerInventory.clear();
+        inventory.clear();
     }
 
     public List<Item> getInventory() {
-        return playerInventory;
+        return inventory;
     }
 
-    public int getEquip() {
+    public Item getEquip() {
         return equip;
     }
 
-    public void setEquip(int equip) {
+    public void setEquip(Item equip) {
+        if (!this.equip.equals(Constants.GENERIC_ITEM)) inventory.add(this.equip);
+        inventory.remove(equip);
         this.equip = equip;
+    }
+
+    public boolean hasEquip() {
+        return !getEquip().equals(Constants.GENERIC_ITEM);
     }
 
     public int getHealth() {
@@ -110,4 +94,28 @@ public class Player {
         this.health = health;
     }
 
+    public static class Builder {
+        private Item equip = Constants.GENERIC_ITEM;
+        private int health = 1;
+        private List<Item> inventory = new ArrayList<>();
+
+        public Builder equip(Item equip) {
+            this.equip = equip;
+            return this;
+        }
+
+        public Builder health(int health) {
+            this.health = health;
+            return this;
+        }
+
+        public Builder inventory(List<Item> inventory) {
+            this.inventory = inventory;
+            return this;
+        }
+
+        public Player build() {
+            return new Player(this);
+        }
+    }
 }

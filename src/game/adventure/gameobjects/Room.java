@@ -1,96 +1,35 @@
 package game.adventure.gameobjects;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import game.adventure.util.Constants;
+import game.adventure.util.Direction;
+import java.util.*;
 
-public class Room {
-    private String name, description;
-    private String n, s, e, w;
-    private List<Item> items;
-    private List<Enemy> enemies;
+public class Room extends GameObject {
+    private final Map<Direction, String> directions;
+    private final List<Item> items;
+    private final List<Enemy> enemies;
     private boolean hasVisited;
 
-    public Room(String name, String description, String n, String s, String e, String w, List<Item> items, List<Enemy> enemies) {
-        init(name, description, n, s, e, w, items, enemies);
-    }
-
-    public Room(String name, String description, String n, String s, String e, String w) {
-        init(name, description, n, s, e, w, new ArrayList<>(), new ArrayList<>());
-    }
-
-    @SuppressWarnings("unchecked")
-    public Room(String name, String description, String n, String s, String e, String w, List<?> itemsOrEnemies, Class<?> type) {
-        List<Item> items = new ArrayList<>();
-        List<Enemy> enemies = new ArrayList<>();
-        if (type == Item.class) {
-            items = (List<Item>) itemsOrEnemies;
-        } else if (type == Enemy.class) {
-            enemies = (List<Enemy>) itemsOrEnemies;
-        } else {
-            throw new IllegalArgumentException("Unsupported class type!");
+    public Room(Builder builder) {
+        super(builder);
+        this.items = builder.items;
+        this.enemies = builder.enemies;
+        directions = new HashMap<>();
+        for (Direction direction : Direction.values()) {
+            directions.put(direction, "");
         }
-        init(name, description, n, s, e, w, items, enemies);
     }
 
-    private void init(String name, String description, String n, String s, String e, String w, List<Item> items, List<Enemy> enemies) {
-        this.name = name;
-        this.description = description;
-        this.n = n;
-        this.s = s;
-        this.e = e;
-        this.w = w;
-        this.items = items;
-        this.enemies = enemies;
-        this.hasVisited = false;
+    public String getDirection(Direction direction) {
+        return directions.get(direction);
     }
 
-    public String getName() {
-        return name;
+    public void setDirection(Direction direction, String north) {
+        directions.put(direction, north);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getN() {
-        return n;
-    }
-
-    public void setN(String n) {
-        this.n = n;
-    }
-
-    public String getS() {
-        return s;
-    }
-
-    public void setS(String s) {
-        this.s = s;
-    }
-
-    public String getE() {
-        return e;
-    }
-
-    public void setE(String e) {
-        this.e = e;
-    }
-
-    public String getW() {
-        return w;
-    }
-
-    public void setW(String w) {
-        this.w = w;
+    public Map<Direction, String> getDirections() {
+        return directions;
     }
 
     public Item getItem(int index) {
@@ -106,48 +45,30 @@ public class Room {
     }
 
     public void addItems(Item... items) {
-        this.items.addAll(Arrays.asList(items));
-    }
-
-    public void removeItem(int index) {
-        items.remove(index);
-    }
-
-    public void removeItem(String item) throws IndexOutOfBoundsException {
-        int index = getInt(item);
-        if (index == -1) {
-            throw new IndexOutOfBoundsException();
-        }
-        items.remove(getItem(index));
-    }
-
-    public void clearItems() {
-        items.clear();
+        this.items.addAll(List.of(items));
     }
 
     public void removeItem(Item item) {
         items.remove(item);
     }
 
-    private int getInt(String name) {
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getName().equalsIgnoreCase(name)) {
-                return i;
-            }
-        }
-        return -1;
+    public void clearItems() {
+        items.clear();
     }
 
-    public Item getItem(String item) throws IndexOutOfBoundsException {
-        int i = getInt(item);
-        if (i == -1) {
-            throw new IndexOutOfBoundsException();
+    public Item getItem(String itemName) {
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(itemName)) return item;
         }
-        return getItems().get(i);
+        return Constants.GENERIC_ITEM;
     }
 
     public boolean hasItem(String item) {
-        return getInt(item) != -1;
+        return !getItem(item).equals(Constants.GENERIC_ITEM);
+    }
+
+    public boolean hasItem(Item item) {
+        return items.contains(item);
     }
 
     public boolean getHasVisited() {
@@ -162,8 +83,8 @@ public class Room {
         return enemies;
     }
 
-    public void setEnemies(List<Enemy> enemies) {
-        this.enemies = enemies;
+    public void clearEnemies() {
+        enemies.clear();
     }
 
     public void addEnemy(Enemy enemy) {
@@ -174,4 +95,38 @@ public class Room {
         enemies.remove(enemy);
     }
 
+    public static class Builder extends GameObject.Builder<Builder> {
+        private final List<Item> items = new ArrayList<>();
+        private final List<Enemy> enemies = new ArrayList<>();
+
+        public Builder items(List<Item> items) {
+            this.items.addAll(items);
+            return this;
+        }
+
+        public Builder items(Item... items) {
+            this.items.addAll(List.of(items));
+            return this;
+        }
+
+        public Builder enemies(List<Enemy> enemies) {
+            this.enemies.addAll(enemies);
+            return this;
+        }
+
+        public Builder enemies(Enemy... enemies) {
+            this.enemies.addAll(List.of(enemies));
+            return this;
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
+
+        @Override
+        public Room build() {
+            return new Room(this);
+        }
+    }
 }

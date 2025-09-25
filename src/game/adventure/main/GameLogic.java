@@ -3,6 +3,9 @@ package game.adventure.main;
 import game.adventure.gameobjects.Enemy;
 import game.adventure.gameobjects.Item;
 import game.adventure.objects.ItemPair;
+import game.adventure.util.Constants;
+import game.adventure.util.Direction;
+import game.adventure.util.HelperFunctions;
 
 import java.util.*;
 
@@ -111,7 +114,7 @@ public class GameLogic {
             return;
         }
 
-        if (AdventureManager.getPlayer().getItem(o).getDamage() == -1) {
+        if (!AdventureManager.getPlayer().getItem(o).isEquippable()) {
             System.out.println("You can't equip " + o + "!");
             return;
         }
@@ -194,17 +197,13 @@ public class GameLogic {
     }
 
     private static void getInventory() {
-        if (AdventureManager.getPlayer().getInventory().isEmpty() || (AdventureManager.getPlayer().getInventory().size() == 1 && AdventureManager.getPlayer().getEquip() != -1)) {
+        if (AdventureManager.getPlayer().getInventory().isEmpty() || (AdventureManager.getPlayer().getInventory().size() == 1 && !AdventureManager.getPlayer().getEquip().equals(Constants.GENERIC_ITEM))) {
             System.out.println("You have nothing in your inventory!");
             return;
         }
 
         System.out.println("Your inventory: ");
         for (int i = 0; i < AdventureManager.getPlayer().getInventory().size(); i++) {
-            if (i == AdventureManager.getPlayer().getEquip()) {
-                continue;
-            }
-
             String nameSuffix = AdventureManager.getPlayer().getItem(i).getDamage() == -1 ? ": " : " (" + AdventureManager.getPlayer().getItem(i).getDamage() + " damage): ";
 
             System.out.println(AdventureManager.getPlayer().getItem(i).getName() + nameSuffix + AdventureManager.getPlayer().getItem(i).getDescription());
@@ -213,14 +212,14 @@ public class GameLogic {
 
     private static void inventoryCommand() {
         System.out.println("Health: " + AdventureManager.getPlayer().getHealth());
-        int damage = AdventureManager.getPlayer().getEquip() == -1 ? 1 : AdventureManager.getPlayer().getDamage();
+        int damage = AdventureManager.getPlayer().getDamage();
         System.out.println("Damage: " + damage);
         System.out.println();
 
         getInventory();
 
-        if (AdventureManager.getPlayer().getEquip() != -1) {
-            System.out.println("\nEquipped item: \n" + AdventureManager.getPlayer().getEquipItem().getName() + " (" + AdventureManager.getPlayer().getDamage() + " damage): " + AdventureManager.getPlayer().getEquipItem().getDescription());
+        if (AdventureManager.getPlayer().hasEquip()) {
+            System.out.println("\nEquipped item: \n" + AdventureManager.getPlayer().getEquip().getName() + " (" + AdventureManager.getPlayer().getDamage() + " damage): " + AdventureManager.getPlayer().getEquip().getDescription());
         }
     }
 
@@ -300,7 +299,7 @@ public class GameLogic {
         }
 
         AdventureManager.getPlayer().addItem(AdventureManager.getCurrentRoom().getItem(o));
-        AdventureManager.getCurrentRoom().removeItem(o);
+        AdventureManager.getCurrentRoom().removeItem(HelperFunctions.getItemFromName(o));
         System.out.println("You took the " + AdventureManager.getPlayer().getItem(o).getName() + ".");
 
     }
@@ -319,8 +318,8 @@ public class GameLogic {
             System.out.println("You don't have that item!");
         }
 
-        if (AdventureManager.getPlayer().isEquip(o)) {
-            AdventureManager.getPlayer().setEquip(-1);
+        if (AdventureManager.getPlayer().isEquip(HelperFunctions.getItemFromName(o))) {
+            AdventureManager.getPlayer().removeEquip();
         }
 
         AdventureManager.getCurrentRoom().addItem(AdventureManager.getPlayer().getItem(o));
@@ -331,58 +330,22 @@ public class GameLogic {
 
     private static void getDirection(List<String> input) {
         boolean roomChanged = false;
-        String direction = input.get(0);
+        String intendedDir = input.get(0);
         String n;
 
-        try {
-            switch (direction) {
-                case "n", "north" -> {
-                    if (AdventureManager.getCurrentRoom().getN().isEmpty()) {
-                        System.out.println("You can't go north here!");
-                        return;
-                    }
-                    roomChanged = true;
-                    AdventureManager.setCurrentRoom(HelperFunctions.getMap(AdventureManager.getCurrentRoom().getN()));
-                    n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
-                    System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
-                }
-                case "s", "south" -> {
-                    if (AdventureManager.getCurrentRoom().getS().isEmpty()) {
-                        System.out.println("You can't go south here!");
-                        return;
-                    }
-                    roomChanged = true;
-                    AdventureManager.setCurrentRoom(HelperFunctions.getMap(AdventureManager.getCurrentRoom().getS()));
-                    n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
-                    System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
-                }
-                case "e", "east" -> {
-                    if (AdventureManager.getCurrentRoom().getE().isEmpty()) {
-                        System.out.println("You can't go east here!");
-                        return;
-                    }
-                    roomChanged = true;
-                    AdventureManager.setCurrentRoom(HelperFunctions.getMap(AdventureManager.getCurrentRoom().getE()));
-                    n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
-                    System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
-                }
-                case "w", "west" -> {
-                    if (AdventureManager.getCurrentRoom().getW().isEmpty()) {
-                        System.out.println("You can't go west here!");
-                        return;
-                    }
-                    roomChanged = true;
-                    AdventureManager.setCurrentRoom(HelperFunctions.getMap(AdventureManager.getCurrentRoom().getW()));
-                    n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
-                    System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
-                }
-            }
-        } finally {
-            if (AdventureManager.getCurrentRoom().getEnemies().isEmpty() || !roomChanged) {
+        for (Direction direction : Direction.values()) {
+            if (!intendedDir.equalsIgnoreCase(direction.getString()) && !intendedDir.equalsIgnoreCase(direction.getFirst())) continue;
+            if (AdventureManager.getCurrentRoom().getDirection(direction).isEmpty()) {
+                System.out.println("You can't go " + direction.getString() + " here!");
                 return;
             }
+            roomChanged = true;
+            AdventureManager.setCurrentRoom(AdventureManager.getCurrentRoom().getDirection(direction));
+            n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
+            System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
+        }
+        if (!AdventureManager.getCurrentRoom().getEnemies().isEmpty() && roomChanged) {
             new Combat();
-
         }
     }
     

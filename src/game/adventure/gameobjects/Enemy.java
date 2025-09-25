@@ -3,38 +3,17 @@ package game.adventure.gameobjects;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Enemy {
-
-    private String name, description;
-
+public class Enemy extends GameObject {
     private int health, damage;
 
     private List<Item> drops;
 
-    public Enemy(String name, String description, int health, int damage, List<Item> drops) {
-        this.name = name;
-        this.description = description;
-        this.health = health;
-        this.damage = damage;
-        this.drops = drops;
+    public Enemy(Builder builder) {
+        super(builder);
+        this.health = builder.health;
+        this.damage = builder.damage;
+        this.drops = builder.drops;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getHealth() {
         return health;
     }
@@ -65,6 +44,43 @@ public class Enemy {
 
     public void removeDrop(Item drop) {
         drops.remove(drop);
+    }
+
+    public static class Builder extends GameObject.Builder<Builder>{
+        private int health = 1;
+        private int damage = 0;
+        private final List<Item> drops = new ArrayList<>();
+
+        public Builder health(int health) {
+            this.health = health;
+            return this;
+        }
+
+        public Builder damage(int damage) {
+            this.damage = damage;
+            return this;
+        }
+
+        public Builder drops(List<Item> drops) {
+            this.drops.addAll(drops);
+            return this;
+        }
+
+        public Builder drops(Item... items) {
+            this.drops.addAll(List.of(items));
+            return this;
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
+
+        @Override
+        public Enemy build() {
+            return new Enemy(this);
+        }
+
     }
 
 }

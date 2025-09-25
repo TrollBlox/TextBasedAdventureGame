@@ -1,9 +1,8 @@
 package game.adventure.main;
 
-import game.adventure.interfaces.Adventure;
+import game.adventure.util.Adventure;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,7 +18,7 @@ public class FileManager {
         String os = System.getProperty("os.name").toLowerCase();
         String userHome = System.getProperty("user.home");
         if (os.contains("win")) {
-            saveDirectory = userHome + "\\Documents\\Adventures\\";
+            saveDirectory = userHome + "/Documents/Adventures/";
         } else if (os.contains("mac")) {
             throw new RuntimeException("mac not supported");
         } else {

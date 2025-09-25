@@ -1,6 +1,6 @@
 package game.adventure.main;
 
-import game.adventure.interfaces.Adventure;
+import game.adventure.util.Adventure;
 import java.util.List;
 import java.util.Scanner;
 

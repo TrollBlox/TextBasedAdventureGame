@@ -1,33 +1,24 @@
 package game.adventure.gameobjects;
 
-public class Item {
-    private String name;
-    private String description;
+public class Item extends GameObject {
     private boolean canPickUp;
     private int damage;
 
-    /** a damage value of -1 would make the item non-equippable */
-    public Item(String name, String description, boolean canPickUp, int damage) {
-        this.name = name;
-        this.description = description;
-        this.canPickUp = canPickUp;
-        this.damage = damage;
+    public boolean isEquippable() {
+        return equippable;
     }
 
-    public String getDescription() {
-        return description;
+    public void setEquippable(boolean equippable) {
+        this.equippable = equippable;
     }
 
-    public void setDescription(String newDescription) {
-        this.description = newDescription;
-    }
+    private boolean equippable;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public Item(Builder builder) {
+        super(builder);
+        this.canPickUp = builder.canPickUp;
+        this.damage = builder.damage;
+        this.equippable = builder.equippable;
     }
 
     public boolean isName(String name) {
@@ -46,7 +37,6 @@ public class Item {
         return damage != -1;
     }
 
-    /** a damage value of -1 would make the item non-equippable */
     public void setDamage(int damage) {
         this.damage = damage;
     }
@@ -55,4 +45,34 @@ public class Item {
         return damage;
     }
 
+    public static class Builder extends GameObject.Builder<Builder> {
+        private boolean canPickUp = true;
+        private int damage = 0;
+        private boolean equippable = false;
+
+        public Builder canPickUp(boolean canPickUp) {
+            this.canPickUp = canPickUp;
+            return this;
+        }
+
+        public Builder damage(int damage) {
+            this.damage = damage;
+            return this;
+        }
+
+        public Builder equippable(boolean equippable) {
+            this.equippable = equippable;
+            return this;
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
+
+        @Override
+        public Item build() {
+            return new Item(this);
+        }
+    }
 }

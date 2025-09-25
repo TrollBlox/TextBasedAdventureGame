@@ -2,7 +2,7 @@ package game.adventure.main;
 
 import game.adventure.gameobjects.Enemy;
 import game.adventure.gameobjects.Item;
-import game.adventure.interfaces.Adventure;
+import game.adventure.util.Adventure;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -125,7 +125,7 @@ public class Combat {
         List<Enemy> toRemove = new ArrayList<>();
 
         for (Enemy e : AdventureManager.getCurrentRoom().getEnemies()) {
-            int damage = AdventureManager.getPlayer().getEquip() == -1 ? 1 : AdventureManager.getPlayer().getDamage();
+            int damage = AdventureManager.getPlayer().getDamage();
 
             e.setHealth(e.getHealth() - damage);
             System.out.println("You did " + damage + " damage to the " + e.getName() + " (hp: " + e.getHealth() + ")");

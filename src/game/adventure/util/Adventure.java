@@ -20,7 +20,16 @@ public abstract class Adventure {
 
     public abstract Player getPlayer();
 
-    public abstract String getName();
+    public String getName() {
+        StringBuilder builder = new StringBuilder();
+        for (char c : this.getClass().getSimpleName().toCharArray()) {
+            if (c < 91) {
+                builder.append(" ");
+            }
+            builder.append(c);
+        }
+        return builder.toString().trim();
+    }
 
     public Room getRoom(String id) {
         return getContext().getRoom(id);

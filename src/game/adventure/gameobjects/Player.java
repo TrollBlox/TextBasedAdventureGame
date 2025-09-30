@@ -55,6 +55,10 @@ public class Player {
         return false;
     }
 
+    public boolean hasItem(Item item) {
+        return inventory.contains(item);
+    }
+
     public void removeItem(Item oldItem) {
         if (isEquip(oldItem)) removeEquip();
         else inventory.remove(oldItem);

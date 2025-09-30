@@ -197,30 +197,13 @@ public class GameLogic {
     }
 
     private static void getInventory() {
-        if (AdventureManager.getPlayer().getInventory().isEmpty() || (AdventureManager.getPlayer().getInventory().size() == 1 && !AdventureManager.getPlayer().getEquip().equals(Constants.GENERIC_ITEM))) {
-            System.out.println("You have nothing in your inventory!");
-            return;
-        }
-
-        System.out.println("Your inventory: ");
-        for (int i = 0; i < AdventureManager.getPlayer().getInventory().size(); i++) {
-            String nameSuffix = AdventureManager.getPlayer().getItem(i).getDamage() == -1 ? ": " : " (" + AdventureManager.getPlayer().getItem(i).getDamage() + " damage): ";
-
-            System.out.println(AdventureManager.getPlayer().getItem(i).getName() + nameSuffix + AdventureManager.getPlayer().getItem(i).getDescription());
-        }
     }
 
     private static void inventoryCommand() {
-        System.out.println("Health: " + AdventureManager.getPlayer().getHealth());
-        int damage = AdventureManager.getPlayer().getDamage();
-        System.out.println("Damage: " + damage);
-        System.out.println();
 
         getInventory();
 
-        if (AdventureManager.getPlayer().hasEquip()) {
-            System.out.println("\nEquipped item: \n" + AdventureManager.getPlayer().getEquip().getName() + " (" + AdventureManager.getPlayer().getDamage() + " damage): " + AdventureManager.getPlayer().getEquip().getDescription());
-        }
+
     }
 
     private static List<String> wordList(String input) {
@@ -340,7 +323,7 @@ public class GameLogic {
                 return;
             }
             roomChanged = true;
-            AdventureManager.setCurrentRoom(AdventureManager.getCurrentRoom().getDirection(direction));
+            AdventureManager.setCurrentRoom(AdventureManager.getContext().getRoom(AdventureManager.getCurrentRoom().getDirection(direction)));
             n = HelperFunctions.startsWithVowel(AdventureManager.getCurrentRoom().getName()) ? "n " : " ";
             System.out.println("You find yourself in a" + n + AdventureManager.getCurrentRoom().getName());
         }

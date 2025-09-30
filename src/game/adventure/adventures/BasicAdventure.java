@@ -6,9 +6,6 @@ import game.adventure.objects.ItemPair;
 import game.adventure.util.AdventureContext;
 import game.adventure.util.Direction;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BasicAdventure extends Adventure {
     private final AdventureContext context = new AdventureContext();
 
@@ -41,7 +38,7 @@ public class BasicAdventure extends Adventure {
 
         context.connectRoom("forest", Direction.NORTH, "entryway");
         context.connectRoom("entryway", Direction.EAST, "hallway");
-        context.connectRoom("hallway", Direction.SOUTH, "morgue");;
+        context.connectRoom("hallway", Direction.SOUTH, "morgue");
 
         context.registerItemUse(new ItemPair(context.getItem("scalpel"), context.getItem("pen")), () -> {
             player.removeItem(context.getItem("pen"));
@@ -70,11 +67,6 @@ public class BasicAdventure extends Adventure {
     @Override
     public Player getPlayer() {
         return player;
-    }
-
-    @Override
-    public String getName() {
-        return "Basic Adventure";
     }
 
     @Override

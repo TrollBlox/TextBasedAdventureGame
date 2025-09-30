@@ -39,11 +39,6 @@ public class AdventureTesting extends Adventure {
     }
 
     @Override
-    public String getName() {
-        return "Adventure Testing";
-    }
-
-    @Override
     public AdventureContext getContext() {
         return context;
     }

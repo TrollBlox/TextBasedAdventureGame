@@ -14,11 +14,11 @@ public class Main {
         int input = -2;
         do {
             System.out.println("Adventures available: ");
-            System.out.println("0: " + AdventureManager.getCurrentAdventure().getName());
+//            System.out.println("0: " + AdventureManager.getCurrentAdventure().getName());
             for (int i = 0; i < adventures.size(); i++) {
                 System.out.println(i + 1 + ": " + adventures.get(i).getName());
             }
-            System.out.println("Which adventure do you want to play? Enter 0 - " + adventures.size());
+            System.out.println("Which adventure do you want to play? Enter 1 - " + adventures.size());
             System.out.print("> ");
             try {
                 input = Integer.parseInt(s.nextLine()) - 1;

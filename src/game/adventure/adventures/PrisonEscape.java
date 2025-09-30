@@ -32,8 +32,6 @@ public class PrisonEscape extends Adventure {
                         context.getItem("knife"), context.getItem("toilet_paper"), context.getItem("apple")));
         context.registerRoom("wing_a", new Room.Builder().name("Wing A").description("Wing A of the prison"));
 
-        System.out.println("You are a prisoner. You must escape out the cell door, but not without a disguise...");
-
         context.registerItemUse(new ItemPair(context.getItem("knife"), context.getItem("apple")), () -> {
             player.removeItem(context.getItem("apple"));
             player.addItem(context.getItem("key"));
@@ -67,6 +65,8 @@ public class PrisonEscape extends Adventure {
             player.removeItem(context.getItem("badge"));
             player.addItem(context.getItem("guard_uniform"));
         });
+
+        System.out.println("You are a prisoner. You must escape out the cell door, but not without a disguise...");
     }
 
     @Override
@@ -77,11 +77,6 @@ public class PrisonEscape extends Adventure {
     @Override
     public Player getPlayer() {
         return player;
-    }
-
-    @Override
-    public String getName() {
-        return "Prison Escape";
     }
 
     @Override
